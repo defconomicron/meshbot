@@ -13,14 +13,14 @@ class MessageQueue
           sleep 1
           next
         end
-        str = message[:str]
+        text = message[:text]
         bot = message[:bot]
         channel = message[:channel]
         begin
           name = bot.tx_name
           host = bot.tx_host
           ch_index = channel
-          text = str.split("\n").join(' ').truncate(228) # NOTE: Max string size is 231 characters
+          text = text.split("\n").join(' ').truncate(228) # NOTE: Max string size is 231 characters
           sent = false
           tries = 5
           while !sent && tries > 0

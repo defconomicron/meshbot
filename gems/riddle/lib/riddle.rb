@@ -13,10 +13,10 @@ class Riddle
   def msg
     return if @bot.thread.present? && @bot.thread.alive?
     riddle, answer = Riddle::RIDDLES.sample
-    @bot.send_msg(riddle, @channel)
+    @bot.send_text(riddle, @channel)
     @bot.thread = Thread.new {
       sleep 30
-      @bot.send_msg(answer, @channel)
+      @bot.send_text(answer, @channel)
     } if answer.present?
     nil
   end

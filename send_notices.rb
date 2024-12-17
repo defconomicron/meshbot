@@ -11,7 +11,7 @@ bot = Bot.new(
   tx_host: bot_settings['tx']['host']
 )
 Notice.order(:order).limit(3).each do |notice|
-  bot.send_msg(notice.message, 0)
+  bot.send_text(notice.message, 0)
   sleep 15
 end
 sleep 60

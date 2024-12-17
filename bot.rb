@@ -36,8 +36,8 @@ class Bot
           params_arr = [payload.split(' ')[1..-1]].compact.flatten
           params_str = params_arr.join(' ')
           $TEXT_MESSAGE_HANDLERS.each {|proc|
-            msg = proc.call(bot: self, payload: payload, params_arr: params_arr, params_str: params_str, from: from, channel: channel)
-            send_msg(msg, channel)
+            text = proc.call(bot: self, payload: payload, params_arr: params_arr, params_str: params_str, from: from, channel: channel)
+            send_text(text, channel)
           }
       end
       node.save
@@ -46,8 +46,8 @@ class Bot
     $log_it.log "[#{@rx_name}] EXCEPTION: #{e}: #{e.backtrace}", :red
   end
 
-  def send_msg(str, channel)
-    return if str.nil? || str.length == 0
-    @message_queue.messages << {bot: self, str: str, channel: channel}
+  def send_text(text, channel)
+    return if text.nil? || text.length == 0
+    @message_queue.messages << {bot: self, text: text, channel: channel}
   end
 end

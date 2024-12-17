@@ -13,10 +13,10 @@ class Joke
   def msg
     return if @bot.thread.present? && @bot.thread.alive?
     joke, answer = Joke::JOKES.sample
-    @bot.send_msg(joke, @channel)
+    @bot.send_text(joke, @channel)
     @bot.thread = Thread.new {
       sleep 30
-      bot.send_msg(answer, @channel)
+      bot.send_text(answer, @channel)
     } if answer.present?
     nil
   end
