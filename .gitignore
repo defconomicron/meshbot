@@ -1,3 +1,4 @@
-*.log
+log.txt
 settings.yml
 *sqlite*
+trivia.dat

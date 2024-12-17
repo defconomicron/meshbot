@@ -6,7 +6,7 @@ class LogIt
 
   def log(str, color = :grey)
     _str = "[#{Time.now.human}] #{str.presence.try(:strip) || '-'}"
-    File.write("#{File.dirname(__FILE__)}/../../../log/log.txt", _str, mode: 'a') rescue nil
+    File.write("#{File.dirname(__FILE__)}/../../../log/log.txt", "#{_str}\n", mode: 'a') rescue nil
     puts _str.colorize(color.presence || :grey)
   end
 end
