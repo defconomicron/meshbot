@@ -1,0 +1,329 @@
+PATH
+  remote: gems/calendar
+  specs:
+    calendar (0.0.1)
+
+PATH
+  remote: gems/clock
+  specs:
+    clock (0.0.1)
+
+PATH
+  remote: gems/coin
+  specs:
+    coin (0.0.1)
+
+PATH
+  remote: gems/eight_ball
+  specs:
+    eight_ball (0.0.1)
+
+PATH
+  remote: gems/google_ai
+  specs:
+    google_ai (0.0.1)
+
+PATH
+  remote: gems/greetings
+  specs:
+    greetings (0.0.1)
+
+PATH
+  remote: gems/help
+  specs:
+    help (0.0.1)
+
+PATH
+  remote: gems/ignore
+  specs:
+    ignore (0.0.1)
+
+PATH
+  remote: gems/info
+  specs:
+    info (0.0.1)
+
+PATH
+  remote: gems/insult
+  specs:
+    insult (0.0.1)
+
+PATH
+  remote: gems/joke
+  specs:
+    joke (0.0.1)
+
+PATH
+  remote: gems/laugh
+  specs:
+    laugh (0.0.1)
+
+PATH
+  remote: gems/log_it
+  specs:
+    log_it (0.0.1)
+
+PATH
+  remote: gems/marco
+  specs:
+    marco (0.0.1)
+
+PATH
+  remote: gems/meshtastic_cli
+  specs:
+    meshtastic_cli (0.0.1)
+
+PATH
+  remote: gems/meshtastic
+  specs:
+    meshtastic (0.0.77)
+      bundle-audit (= 0.1.0)
+      geocoder (= 1.8.3)
+      google-protobuf (= 3.21.12)
+      mqtt (= 0.6.0)
+      rubocop (>= 1.66.1)
+      rubocop-rake (>= 0.6.0)
+      rubocop-rspec (>= 3.0.5)
+      rvm (= 1.11.3.9)
+      tty-prompt (= 0.23.1)
+      yard (= 0.9.37)
+
+PATH
+  remote: gems/message_queue
+  specs:
+    message_queue (0.0.1)
+
+PATH
+  remote: gems/notice_setter
+  specs:
+    notice_setter (0.0.1)
+
+PATH
+  remote: gems/pong
+  specs:
+    pong (0.0.1)
+
+PATH
+  remote: gems/riddle
+  specs:
+    riddle (0.0.1)
+
+PATH
+  remote: gems/seen
+  specs:
+    seen (0.0.1)
+
+PATH
+  remote: gems/shutdown
+  specs:
+    shutdown (0.0.1)
+
+PATH
+  remote: gems/string
+  specs:
+    string (0.0.1)
+
+PATH
+  remote: gems/time_utilities
+  specs:
+    time_utilities (0.0.1)
+
+PATH
+  remote: gems/trivia
+  specs:
+    trivia (0.0.1)
+
+PATH
+  remote: gems/url_resolver
+  specs:
+    url_resolver (0.0.1)
+
+PATH
+  remote: gems/weather
+  specs:
+    weather (0.0.1)
+
+PATH
+  remote: gems/whois
+  specs:
+    whois (0.0.1)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    activemodel (7.2.2)
+      activesupport (= 7.2.2)
+    activerecord (7.2.2)
+      activemodel (= 7.2.2)
+      activesupport (= 7.2.2)
+      timeout (>= 0.4.0)
+    activesupport (7.2.2)
+      base64
+      benchmark (>= 0.3)
+      bigdecimal
+      concurrent-ruby (~> 1.0, >= 1.3.1)
+      connection_pool (>= 2.2.5)
+      drb
+      i18n (>= 1.6, < 2)
+      logger (>= 1.4.2)
+      minitest (>= 5.1)
+      securerandom (>= 0.3)
+      tzinfo (~> 2.0, >= 2.0.5)
+    addressable (2.8.7)
+      public_suffix (>= 2.0.2, < 7.0)
+    ast (2.4.2)
+    base64 (0.2.0)
+    benchmark (0.4.0)
+    bigdecimal (3.1.8)
+    bundle-audit (0.1.0)
+      bundler-audit
+    bundler-audit (0.9.2)
+      bundler (>= 1.2.0, < 3)
+      thor (~> 1.0)
+    coderay (1.1.3)
+    colorize (1.1.0)
+    concurrent-ruby (1.3.4)
+    connection_pool (2.4.1)
+    csv (3.3.0)
+    drb (2.2.1)
+    embiggen (1.6.0)
+      addressable (~> 2.3)
+    geocoder (1.8.3)
+      base64 (>= 0.1.0)
+      csv (>= 3.0.0)
+    google-protobuf (3.21.12)
+    i18n (1.14.6)
+      concurrent-ruby (~> 1.0)
+    json (2.8.2)
+    json-repair (0.2.0)
+    language_server-protocol (3.17.0.3)
+    logger (1.6.1)
+    method_source (1.1.0)
+    minitest (5.25.2)
+    mqtt (0.6.0)
+    mustermann (2.0.2)
+      ruby2_keywords (~> 0.0.1)
+    parallel (1.26.3)
+    parser (3.3.6.0)
+      ast (~> 2.4.1)
+      racc
+    pastel (0.8.0)
+      tty-color (~> 0.5)
+    pry (0.15.0)
+      coderay (~> 1.1)
+      method_source (~> 1.0)
+    public_suffix (6.0.1)
+    racc (1.8.1)
+    rack (2.2.10)
+    rack-protection (2.2.4)
+      rack
+    rainbow (3.1.1)
+    rake (12.3.3)
+    regexp_parser (2.9.2)
+    rexml (3.3.9)
+    rubocop (1.68.0)
+      json (~> 2.3)
+      language_server-protocol (>= 3.17.0)
+      parallel (~> 1.10)
+      parser (>= 3.3.0.2)
+      rainbow (>= 2.2.2, < 4.0)
+      regexp_parser (>= 2.4, < 3.0)
+      rubocop-ast (>= 1.32.2, < 2.0)
+      ruby-progressbar (~> 1.7)
+      unicode-display_width (>= 2.4.0, < 3.0)
+    rubocop-ast (1.36.1)
+      parser (>= 3.3.1.0)
+    rubocop-rake (0.6.0)
+      rubocop (~> 1.0)
+    rubocop-rspec (3.2.0)
+      rubocop (~> 1.61)
+    ruby-progressbar (1.13.0)
+    ruby2_keywords (0.0.5)
+    rvm (1.11.3.9)
+    securerandom (0.3.2)
+    sinatra (2.2.4)
+      mustermann (~> 2.0)
+      rack (~> 2.2)
+      rack-protection (= 2.2.4)
+      tilt (~> 2.0)
+    sinatra-activerecord (2.0.27)
+      activerecord (>= 4.1)
+      sinatra (>= 1.0)
+    sqlite3 (2.3.0-aarch64-linux-gnu)
+    sqlite3 (2.3.0-aarch64-linux-musl)
+    sqlite3 (2.3.0-arm-linux-gnu)
+    sqlite3 (2.3.0-arm-linux-musl)
+    sqlite3 (2.3.0-arm64-darwin)
+    sqlite3 (2.3.0-x86_64-darwin)
+    sqlite3 (2.3.0-x86_64-linux-gnu)
+    thor (1.3.2)
+    tilt (2.4.0)
+    timeout (0.4.2)
+    tty-color (0.6.0)
+    tty-cursor (0.7.1)
+    tty-prompt (0.23.1)
+      pastel (~> 0.8)
+      tty-reader (~> 0.8)
+    tty-reader (0.9.0)
+      tty-cursor (~> 0.7)
+      tty-screen (~> 0.8)
+      wisper (~> 2.0)
+    tty-screen (0.8.2)
+    tzinfo (2.0.6)
+      concurrent-ruby (~> 1.0)
+    unicode-display_width (2.6.0)
+    wisper (2.0.1)
+    yard (0.9.37)
+
+PLATFORMS
+  aarch64-linux-gnu
+  aarch64-linux-musl
+  arm-linux-gnu
+  arm-linux-musl
+  arm64-darwin
+  x86_64-darwin-21
+  x86_64-linux
+
+DEPENDENCIES
+  activerecord (~> 7)
+  calendar!
+  clock!
+  coin!
+  colorize
+  eight_ball!
+  embiggen (~> 1.6)
+  google_ai!
+  greetings!
+  help!
+  ignore!
+  info!
+  insult!
+  joke!
+  json-repair
+  laugh!
+  log_it!
+  marco!
+  meshtastic!
+  meshtastic_cli!
+  message_queue!
+  notice_setter!
+  pong!
+  pry
+  rack
+  rake
+  rexml
+  riddle!
+  seen!
+  shutdown!
+  sinatra
+  sinatra-activerecord
+  sqlite3
+  string!
+  time_utilities!
+  trivia!
+  url_resolver!
+  weather!
+  whois!
+
+BUNDLED WITH
+   2.5.22
