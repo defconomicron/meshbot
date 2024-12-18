@@ -10,7 +10,7 @@ class MeshtasticCli
     PTY.spawn("meshtastic --host #{@host} --listen") do |stdout, stdin, pid|
       packet = nil
       stdout.each do |line|
-        $log_it.log "[#{@name}] RAW: #{line.strip}"
+        # $log_it.log "[#{@name}] RAW: #{line.strip}"
         str = line.strip
         str = str.force_encoding('UTF-8')
         if str =~ /DEBUG/
@@ -22,15 +22,12 @@ class MeshtasticCli
           case packet
             when /packet/
               packet = packet.split('packet')[1].strip rescue ''
-              packet = JSON.repair(packet) rescue nil
-              packet = JSON.parse(packet) rescue nil
-              yield({"packet" => packet}) if packet.present?
             when /node_info/
               packet = packet.split('node_info')[1].strip rescue ''
-              packet = JSON.repair(packet) rescue nil
-              packet = JSON.parse(packet) rescue nil
-              yield({"node_info" => packet}) if packet.present?
-            end
+          end
+          packet = JSON.repair(packet) rescue nil
+          packet = JSON.parse(packet) rescue nil
+          yield packet if packet.present?
           packet = nil
         end
       end

@@ -13,45 +13,45 @@ class Bot
   end
 
   def monitor
-    MeshtasticCli.new(host: @rx_host, name: @rx_name).packets do |response|
-      $log_it.log "[#{@rx_name}] RX: #{response}"
-      # telemetry
-      # {"node_info"=>{"num"=>2718567968, "snr"=>6.5, "last_heard"=>1734493431, "device_metrics"=>{"battery_level"=>101, "voltage"=>0, "channel_utilization"=>2.24333334, "air_util_tx"=>0.0186944436, "uptime_seconds"=>54}}}
-      # position
-      # {"node_info"=>{"num"=>1129898244, "position"=>{"latitude_i"=>354549760, "longitude_i"=>-976355328, "altitude"=>372, "time"=>1734496726, "location_source"=>"LOC_MANUAL"}}}
-      # user
-      # {"node_info"=>{"num"=>1128178176, "user"=>{"id"=>"!433ea200", "long_name"=>"KA5ECX MOBILE 1", "short_name"=>"ECX1", "macaddr"=>"H312C>242000", "hw_model"=>"HELTEC_V3", "public_key"=>"260013%376247*374304e234324013037)211021n025006204201\t<371313jF023227r=Q"}}}
-      # text
-      # {"packet"=>{"from"=>3324404670, "to"=>4294967295, "channel"=>2, "decoded"=>{"portnum"=>"TEXT_MESSAGE_APP", "payload"=>"okok", "bitfield"=>1}}}
-      num = response['node_info']['num'] rescue nil
-      long_name = response['node_info']['user']['long_name'] rescue nil
-      short_name = response['node_info']['user']['short_name'] rescue nil
-      macaddr = response['node_info']['user']['macaddr'] rescue nil
-      hw_model = response['node_info']['user']['hw_model'] rescue nil
-      from = response['packet']['from'] rescue nil
-      channel = response['packet']['channel'] rescue nil
-      decoded = response['packet']['decoded'] rescue nil
-      portnum = decoded['portnum'] rescue nil
+    MeshtasticCli.new(host: @rx_host, name: @rx_name).packets do |packet|
+      next if !packet.is_a?(Hash)
+      $log_it.log "[#{@rx_name}] RX: #{packet}"
+      num = packet['num'] rescue nil
+      from = packet['from'] rescue nil
+      channel = packet['channel'] rescue nil
+      decoded = packet['decoded'] rescue nil
       payload = decoded['payload'] rescue nil
-      bitfield = decoded['bitfield'] rescue nil
       time_now = Time.now
-      case response.keys[0]
-        when 'node_info'
-          node = Node.where(number: num).first_or_initialize
-          next if node.ignore?
-          node.attributes = {nodeinfo_snapshot: response['node_info'].to_json, updated_at: time_now}
-          node.save
-        when 'packet'
-          node = Node.where(number: from).first_or_initialize
-          next if node.ignore?
-          payload = "#{payload}".strip
-          params_arr = [payload.split(' ')[1..-1]].compact.flatten
-          params_str = params_arr.join(' ')
-          $TEXT_MESSAGE_HANDLERS.each {|proc|
-            text = proc.call(bot: self, payload: payload, params_arr: params_arr, params_str: params_str, from: from, channel: channel)
-            send_text(text, channel)
-          }
-          node.save
+      if packet.keys.include?('user')
+        $log_it.log "user: #{packet}"
+        node = Node.where(number: num).first_or_initialize
+        next if node.ignore?
+        node.attributes = {nodeinfo_snapshot: packet.to_json, updated_at: time_now}
+        node.save
+      elsif packet.keys.include?('position')
+        $log_it.log "position: #{packet}"
+        node = Node.where(number: num).first_or_initialize
+        next if node.ignore?
+        node.attributes = {position_snapshot: packet.to_json, updated_at: time_now}
+        node.save
+      elsif packet.keys.include?('device_metrics')
+        $log_it.log "device_metrics: #{packet}"
+        node = Node.where(number: num).first_or_initialize
+        next if node.ignore?
+        node.attributes = {telemetry_snapshot: packet.to_json, updated_at: time_now}
+        node.save
+      elsif packet.keys.include?('decoded')
+        $log_it.log "decoded: #{packet}"
+        node = Node.where(number: from).first_or_initialize
+        next if node.ignore?
+        payload = "#{payload}".strip
+        params_arr = [payload.split(' ')[1..-1]].compact.flatten
+        params_str = params_arr.join(' ')
+        $TEXT_MESSAGE_HANDLERS.each {|proc|
+          text = proc.call(bot: self, payload: payload, params_arr: params_arr, params_str: params_str, from: from, channel: channel)
+          send_text(text, channel)
+        }
+        node.save
       end
     end
   rescue Exception => e
@@ -63,3 +63,11 @@ class Bot
     @message_queue.messages << {bot: self, text: text, channel: channel}
   end
 end
+# telemetry
+# {"packet"=>{"num"=>2718567968, "snr"=>6.5, "last_heard"=>1734493431, "device_metrics"=>{"battery_level"=>101, "voltage"=>0, "channel_utilization"=>2.24333334, "air_util_tx"=>0.0186944436, "uptime_seconds"=>54}}}
+# position
+# {"packet"=>{"num"=>1129898244, "position"=>{"latitude_i"=>354549760, "longitude_i"=>-976355328, "altitude"=>372, "time"=>1734496726, "location_source"=>"LOC_MANUAL"}}}
+# nodeinfo
+# {"packet"=>{"num"=>1128178176, "user"=>{"id"=>"!433ea200", "long_name"=>"KA5ECX MOBILE 1", "short_name"=>"ECX1", "macaddr"=>"H312C>242000", "hw_model"=>"HELTEC_V3", "public_key"=>"260013%376247*374304e234324013037)211021n025006204201\t<371313jF023227r=Q"}}}
+# text
+# {"packet"=>{"from"=>3324404670, "to"=>4294967295, "channel"=>2, "decoded"=>{"portnum"=>"TEXT_MESSAGE_APP", "payload"=>"okok", "bitfield"=>1}}}
