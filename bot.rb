@@ -15,7 +15,13 @@ class Bot
   def monitor
     MeshtasticCli.new(host: @rx_host, name: @rx_name).packets do |response|
       $log_it.log "[#{@rx_name}] RX: #{response}"
+      # telemetry
+      # {"node_info"=>{"num"=>2718567968, "snr"=>6.5, "last_heard"=>1734493431, "device_metrics"=>{"battery_level"=>101, "voltage"=>0, "channel_utilization"=>2.24333334, "air_util_tx"=>0.0186944436, "uptime_seconds"=>54}}}
+      # position
+      # {"node_info"=>{"num"=>1129898244, "position"=>{"latitude_i"=>354549760, "longitude_i"=>-976355328, "altitude"=>372, "time"=>1734496726, "location_source"=>"LOC_MANUAL"}}}
+      # user
       # {"node_info"=>{"num"=>1128178176, "user"=>{"id"=>"!433ea200", "long_name"=>"KA5ECX MOBILE 1", "short_name"=>"ECX1", "macaddr"=>"H312C>242000", "hw_model"=>"HELTEC_V3", "public_key"=>"260013%376247*374304e234324013037)211021n025006204201\t<371313jF023227r=Q"}}}
+      # text
       # {"packet"=>{"from"=>3324404670, "to"=>4294967295, "channel"=>2, "decoded"=>{"portnum"=>"TEXT_MESSAGE_APP", "payload"=>"okok", "bitfield"=>1}}}
       num = response['node_info']['num'] rescue nil
       long_name = response['node_info']['user']['long_name'] rescue nil

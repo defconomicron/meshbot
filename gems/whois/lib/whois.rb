@@ -19,7 +19,8 @@ class Whois
     # rx_rssi = nodeinfo_snapshot['rx_rssi'] rescue nil
     # via_mqtt = nodeinfo_snapshot['via_mqtt'] rescue nil
     str = []
-    str << "#{short_name}: #{long_name} is running a #{hw_model} with a MAC address of #{macaddr} and was heard on #{Time.at(rx_time.to_i).strftime('%m-%d-%Y at %H:%M:%S %p')}"
+    str << "#{short_name}: #{long_name} is running a #{hw_model} with a MAC address of #{macaddr}"
+    # str << "and was heard on #{Time.at(rx_time.to_i).strftime('%m-%d-%Y at %H:%M:%S %p')}"
     # str << (via_mqtt ? 'via MQTT.' : "with a SNR of #{rx_snr} and an RSSI of #{rx_rssi} via LoRa.")
     # telemetry_snapshot = JSON.parse(node.telemetry_snapshot) rescue {}
     # if telemetry_snapshot.present?

@@ -5,11 +5,13 @@ class Node < ActiveRecord::Base
   has_one :trivia_profile
 
   def set_short_name
-    self.short_name = JSON.parse(nodeinfo_snapshot)['user']['short_name'] rescue nil
+    str = JSON.parse(nodeinfo_snapshot)['user']['short_name'] rescue nil
+    self.short_name = str if str.present?
   end
 
   def set_long_name
-    self.long_name = JSON.parse(nodeinfo_snapshot)['user']['long_name'] rescue nil
+    str = JSON.parse(nodeinfo_snapshot)['user']['long_name'] rescue nil
+    self.long_name = str if str.present?
   end
 
   def ignore?
