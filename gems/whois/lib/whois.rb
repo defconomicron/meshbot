@@ -14,23 +14,16 @@ class Whois
     long_name = nodeinfo_snapshot['user']['long_name'] rescue nil
     hw_model = nodeinfo_snapshot['user']['hw_model'] rescue nil
     macaddr = nodeinfo_snapshot['user']['macaddr'] rescue nil
-    # rx_time = nodeinfo_snapshot['rx_time'] rescue nil
-    # rx_snr = nodeinfo_snapshot['rx_snr'] rescue nil
-    # rx_rssi = nodeinfo_snapshot['rx_rssi'] rescue nil
-    # via_mqtt = nodeinfo_snapshot['via_mqtt'] rescue nil
+    telemetry_snapshot = JSON.parse(node.telemetry_snapshot) rescue {}
+    uptime_seconds = telemetry_snapshot['device_metrics']['uptime_seconds'] rescue nil
+    battery_level = telemetry_snapshot['device_metrics']['battery_level'] rescue nil
+    last_heard = telemetry_snapshot['last_heard'] rescue nil
+    snr = telemetry_snapshot['snr'] rescue nil
     str = []
     str << "#{short_name}: #{long_name} is running a #{hw_model} with a MAC address of #{macaddr}"
-    # str << "and was heard on #{Time.at(rx_time.to_i).strftime('%m-%d-%Y at %H:%M:%S %p')}"
-    # str << (via_mqtt ? 'via MQTT.' : "with a SNR of #{rx_snr} and an RSSI of #{rx_rssi} via LoRa.")
-    # telemetry_snapshot = JSON.parse(node.telemetry_snapshot) rescue {}
-    # if telemetry_snapshot.present?
-    #   uptime_seconds = telemetry_snapshot['decoded']['payload']['device_metrics']['uptime_seconds']
-    #   battery_level = telemetry_snapshot['decoded']['payload']['device_metrics']['battery_level']
-    #   str << "Node's uptime is #{uptime_seconds} seconds and current battery level is #{battery_level}%."
-    # end
-    # position_snapshot = JSON.parse(node.position_snapshot) rescue {}
-    # if position_snapshot.present?
-    # end
+    str << "and was heard on #{Time.at(last_heard.to_i).strftime('%m-%d-%Y at %H:%M:%S %p')}" if last_heard.present?
+    str << "with a SNR of #{snr}" if snr.present?
+    str << "Node's uptime is #{uptime_seconds} seconds and current battery level is #{battery_level}%." if uptime_seconds.present? && battery_level.present?
     str.join(' ').strip
   end
 end
