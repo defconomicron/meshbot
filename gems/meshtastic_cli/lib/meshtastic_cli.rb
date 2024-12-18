@@ -19,11 +19,10 @@ class MeshtasticCli
           packet << str << "\n"
         end
         if packet.present? && str =~ /\}/
-          case packet
-            when /packet/
-              packet = packet.split('packet')[1].strip rescue ''
-            when /node_info/
-              packet = packet.split('node_info')[1].strip rescue ''
+          packet = case packet
+            when /packet/ then  packet.split('packet')[1].strip rescue ''
+            when /node_info/ then  packet.split('node_info')[1].strip rescue ''
+            else packet
           end
           packet = JSON.repair(packet) rescue nil
           packet = JSON.parse(packet) rescue nil
