@@ -165,6 +165,7 @@ class Trivia
     end
 
     $TRIVIA_QUESTION, $TRIVIA_ANSWER = File.readlines("#{File.dirname(__FILE__)}/trivia.dat").sample.split('*')
+    $TRIVIA_ANSWER = $TRIVIA_ANSWER.gsub(/\"/, "`")
 
     $TRIVIA_QUESTION.strip!
     trivia_question = $TRIVIA_QUESTION
