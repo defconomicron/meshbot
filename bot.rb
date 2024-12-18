@@ -22,24 +22,15 @@ class Bot
       decoded = packet['decoded'] rescue nil
       payload = decoded['payload'] rescue nil
       time_now = Time.now
+      node = Node.where(number: num.presence || from).first_or_initialize
+      next if node.ignore?
       if packet.keys.include?('user')
-        node = Node.where(number: num).first_or_initialize
-        next if node.ignore?
         node.attributes = {nodeinfo_snapshot: packet.to_json, updated_at: time_now}
-        node.save
       elsif packet.keys.include?('position')
-        node = Node.where(number: num).first_or_initialize
-        next if node.ignore?
         node.attributes = {position_snapshot: packet.to_json, updated_at: time_now}
-        node.save
       elsif packet.keys.include?('device_metrics')
-        node = Node.where(number: num).first_or_initialize
-        next if node.ignore?
         node.attributes = {telemetry_snapshot: packet.to_json, updated_at: time_now}
-        node.save
       elsif packet.keys.include?('decoded')
-        node = Node.where(number: from).first_or_initialize
-        next if node.ignore?
         payload = "#{payload}".strip
         params_arr = [payload.split(' ')[1..-1]].compact.flatten
         params_str = params_arr.join(' ')
@@ -47,8 +38,8 @@ class Bot
           text = proc.call(bot: self, payload: payload, params_arr: params_arr, params_str: params_str, from: from, channel: channel)
           send_text(text, channel)
         }
-        node.save
       end
+      node.save
     end
   rescue Exception => e
     $log_it.log "[#{@rx_name}] EXCEPTION: #{e}: #{e.backtrace}", :red
