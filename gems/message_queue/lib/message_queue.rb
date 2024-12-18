@@ -33,9 +33,9 @@ class MessageQueue
             $log_it.log("[#{name}] TIMEOUT: #{lines.join("\n")}", :red) if timed_out
             tries -= 1
           end
-          $log_it.log "[#{name}] INFO: Whew! I'm tired.  I'm going to sleep...", :yellow
-          sleep 10
-          $log_it.log "[#{name}] INFO: Ok I'm awake again!", :yellow
+          # $log_it.log "[#{name}] INFO: Whew! I'm tired.  I'm going to sleep...", :yellow
+          # sleep 10
+          # $log_it.log "[#{name}] INFO: Ok I'm awake again!", :yellow
         rescue Exception => e
           $log_it.log "[#{name}] EXCEPTION: #{e}: #{e.backtrace}", :red
         end

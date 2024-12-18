@@ -27,5 +27,9 @@ class MeshtasticCli
         end
       end
     end
+  rescue Exception => e
+    $log_it.log "[#{@name}] EXCEPTION: #{e}: #{e.backtrace}", :red
+    sleep 60
+    retry
   end
 end
