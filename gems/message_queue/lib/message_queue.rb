@@ -25,7 +25,7 @@ class MessageQueue
           tries = 5
           while !sent && tries > 0
             $log_it.log "[#{name}] TX: #{text}", :green
-            f = IO.popen("meshtastic --host #{host} --ch-index #{ch_index} --ack --sendtext \"#{text}\"")
+            f = IO.popen("meshtastic --host #{host} --ch-index #{ch_index} --no-time --ack --sendtext \"#{text}\"")
             lines = f.readlines
             f.close
             timed_out = (lines.last =~ /Timed out/i) rescue false
