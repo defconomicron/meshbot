@@ -23,25 +23,21 @@ class Bot
       payload = decoded['payload'] rescue nil
       time_now = Time.now
       if packet.keys.include?('user')
-        $log_it.log "user: #{packet}"
         node = Node.where(number: num).first_or_initialize
         next if node.ignore?
         node.attributes = {nodeinfo_snapshot: packet.to_json, updated_at: time_now}
         node.save
       elsif packet.keys.include?('position')
-        $log_it.log "position: #{packet}"
         node = Node.where(number: num).first_or_initialize
         next if node.ignore?
         node.attributes = {position_snapshot: packet.to_json, updated_at: time_now}
         node.save
       elsif packet.keys.include?('device_metrics')
-        $log_it.log "device_metrics: #{packet}"
         node = Node.where(number: num).first_or_initialize
         next if node.ignore?
         node.attributes = {telemetry_snapshot: packet.to_json, updated_at: time_now}
         node.save
       elsif packet.keys.include?('decoded')
-        $log_it.log "decoded: #{packet}"
         node = Node.where(number: from).first_or_initialize
         next if node.ignore?
         payload = "#{payload}".strip
