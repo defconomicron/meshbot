@@ -16,7 +16,7 @@ class Joke
     @bot.send_text(joke, @channel)
     @bot.thread = Thread.new {
       sleep 30
-      bot.send_text(answer, @channel)
+      @bot.send_text(answer, @channel)
     } if answer.present?
     nil
   end

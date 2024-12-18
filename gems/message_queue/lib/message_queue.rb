@@ -21,7 +21,7 @@ class MessageQueue
           host = bot.tx_host
           ch_index = channel
           text = text.split("\n").join(' ').truncate(228) # NOTE: Max string size is 231 characters
-          text = text.gsub(/\"/, "'").gsub(/[^\w\s\.\?\!\']/, '')
+          text = text.gsub(/\"/, "'").gsub(/[^\w\s\.\?\!\'\:\-]/, '')
           sent = false
           tries = 5
           while !sent && tries > 0
@@ -34,9 +34,6 @@ class MessageQueue
             $log_it.log("[#{name}] TIMEOUT: #{lines.join("\n")}", :red) if timed_out
             tries -= 1
           end
-          # $log_it.log "[#{name}] INFO: Whew! I'm tired.  I'm going to sleep...", :yellow
-          # sleep 10
-          # $log_it.log "[#{name}] INFO: Ok I'm awake again!", :yellow
         rescue Exception => e
           $log_it.log "[#{name}] EXCEPTION: #{e}: #{e.backtrace}", :red
         end

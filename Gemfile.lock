@@ -99,9 +99,9 @@ PATH
     notice_setter (0.0.1)
 
 PATH
-  remote: gems/pong
+  remote: gems/ping
   specs:
-    pong (0.0.1)
+    ping (0.0.1)
 
 PATH
   remote: gems/riddle
@@ -122,11 +122,6 @@ PATH
   remote: gems/string
   specs:
     string (0.0.1)
-
-PATH
-  remote: gems/test
-  specs:
-    test (0.0.1)
 
 PATH
   remote: gems/time_utilities
@@ -307,7 +302,7 @@ DEPENDENCIES
   meshtastic_cli!
   message_queue!
   notice_setter!
-  pong!
+  ping!
   pry
   rack
   rake
@@ -319,7 +314,6 @@ DEPENDENCIES
   sinatra-activerecord
   sqlite3
   string!
-  test!
   time_utilities!
   url_resolver!
   weather!

@@ -4,12 +4,12 @@ class Node < ActiveRecord::Base
 
   has_one :trivia_profile
 
-  def set_long_name
-    self.long_name = JSON.parse(nodeinfo_snapshot)['decoded']['payload']['long_name'] rescue nil
+  def set_short_name
+    self.short_name = JSON.parse(nodeinfo_snapshot)['user']['short_name'] rescue nil
   end
 
-  def set_short_name
-    self.short_name = JSON.parse(nodeinfo_snapshot)['decoded']['payload']['short_name'] rescue nil
+  def set_long_name
+    self.long_name = JSON.parse(nodeinfo_snapshot)['user']['long_name'] rescue nil
   end
 
   def ignore?
