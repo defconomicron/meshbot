@@ -21,7 +21,7 @@ class MessageQueue
           host = bot.tx_host
           ch_index = channel
           text = text.split("\n").join(' ').truncate(228) # NOTE: Max string size is 231 characters
-          text = text.gsub(/\"/, "'").gsub(/[^\w\s\.\?\!\'\:\-]/, '')
+          text = text.gsub(/\"/, "'").gsub(/[^\w\s\.\?\!\'\:\-\;\/\@\=]/, '')
           sent = false
           tries = 5
           while !sent && tries > 0

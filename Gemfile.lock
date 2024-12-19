@@ -19,11 +19,6 @@ PATH
     eight_ball (0.0.1)
 
 PATH
-  remote: gems/google_ai
-  specs:
-    google_ai (0.0.1)
-
-PATH
   remote: gems/greetings
   specs:
     greetings (0.0.1)
@@ -132,11 +127,6 @@ PATH
   remote: gems/url_resolver
   specs:
     url_resolver (0.0.1)
-
-PATH
-  remote: gems/weather
-  specs:
-    weather (0.0.1)
 
 PATH
   remote: gems/whois
@@ -287,7 +277,6 @@ DEPENDENCIES
   colorize
   eight_ball!
   embiggen (~> 1.6)
-  google_ai!
   greetings!
   help!
   ignore!
@@ -316,7 +305,6 @@ DEPENDENCIES
   string!
   time_utilities!
   url_resolver!
-  weather!
   whois!
 
 BUNDLED WITH
