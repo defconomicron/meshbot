@@ -20,8 +20,11 @@ class MessageQueue
           name = bot.tx_name
           host = bot.tx_host
           ch_index = channel
-          text = text.split("\n").join(' ').truncate(228) # NOTE: Max string size is 231 characters
-          text = text.gsub(/\"/, "'").gsub(/[^\w\s\.\?\!\'\:\-\;\/\@\=]/, '')
+          text = text.split("\n").
+            join(' ').
+            truncate(228). # NOTE: Max string size is 231 characters
+            gsub(/\"/, "'").
+            gsub(/[^\w\s\.\?\!\'\:\-\;\/\@\=]/, '')
           sent = false
           tries = 5
           while !sent && tries > 0
@@ -29,9 +32,8 @@ class MessageQueue
             f = IO.popen("meshtastic --host #{host} --ch-index #{ch_index} --no-time --ack --sendtext \"#{text}\"")
             lines = f.readlines
             f.close
-            timed_out = (lines.last =~ /Timed out/i) rescue false
-            sent = !timed_out
-            $log_it.log("[#{name}] TIMEOUT: #{lines.join("\n")}", :red) if timed_out
+            sent = !(lines.last =~ /timed out/i) rescue false
+            $log_it.log("[#{name}] TIMEOUT: #{lines.join("\n")}", :red) if !sent
             tries -= 1
           end
         rescue Exception => e

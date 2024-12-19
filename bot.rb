@@ -43,6 +43,8 @@ class Bot
     end
   rescue Exception => e
     $log_it.log "[#{@rx_name}] EXCEPTION: #{e}: #{e.backtrace}", :red
+    sleep 60
+    retry
   end
 
   def send_text(text, channel)
