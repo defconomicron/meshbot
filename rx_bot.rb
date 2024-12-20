@@ -1,10 +1,9 @@
 class RxBot
-  attr_accessor :thread, :name, :host
+  attr_accessor :name, :host
 
   def initialize(options={})
     @name = options[:name]
     log "Starting up!!!", :green
-    @thread = nil
     @host = options[:host]
     log "Done!", :green
   end

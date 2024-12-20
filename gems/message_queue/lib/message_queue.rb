@@ -23,7 +23,7 @@ class MessageQueue
             join(' ').
             truncate(228). # NOTE: Max string size is 231 characters
             gsub(/\"/, "'").
-            gsub(/[^\w\s\.\?\!\'\:\-\;\/\@\=\,]/, '')
+            gsub(/[^\w\s\.\?\!\'\:\-\;\/\@\=\,\*]/, '')
           sent = false
           tries = 5
           $tx_bot.log "TX: #{text}", :green

@@ -1,8 +1,9 @@
 ($COMMAND_KEYWORDS ||=[]) << '@8ball'
-($TEXT_MESSAGE_HANDLERS ||= []) << Proc.new {|args| EightBall.new(args[:params_str]).msg if /^@8ball/i =~ args[:payload]}
+($TEXT_MESSAGE_HANDLERS ||= []) << Proc.new {|args| EightBall.new(channel: args[:channel], question: args[:params_str]).msg if /^@8ball/i =~ args[:payload]}
 class EightBall
-  def initialize(question)
-    @question = question
+  def initialize(options)
+    @channel = options[:channel]
+    @question = options[:question]
   end
 
   def msg
@@ -30,6 +31,9 @@ class EightBall
       'Yes',
       'Signs point to yes'
     ]
-    'Magic 8 ball reads: ' << answers.sample
+    $tx_bot.send_text 'After a few moments of shaking the magic 8 ball, it is turned upright...', @channel
+    $tx_bot.send_text 'An answer to your question is revealed...', @channel
+    $tx_bot.send_text ('The magic 8 ball reads: ' << answers.sample), @channel
+    nil
   end
 end

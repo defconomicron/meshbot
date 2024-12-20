@@ -4,13 +4,14 @@ class TxBot
   def initialize(options={})
     @name = options[:name]
     log "Starting up!!!", :green
-    @thread = nil
     @host = options[:host]
+    @thread = nil
+    @message_queue = MessageQueue.new
     log "Done!", :green
   end
 
   def monitor
-    @message_queue = MessageQueue.new.start
+    @message_queue.start
   end
 
   def send_text(text, channel)
