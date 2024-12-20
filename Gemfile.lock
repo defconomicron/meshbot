@@ -129,6 +129,11 @@ PATH
     string (0.0.1)
 
 PATH
+  remote: gems/test
+  specs:
+    test (0.0.1)
+
+PATH
   remote: gems/time_utilities
   specs:
     time_utilities (0.0.1)
@@ -315,6 +320,7 @@ DEPENDENCIES
   sinatra-activerecord
   sqlite3
   string!
+  test!
   time_utilities!
   url_resolver!
   whois!

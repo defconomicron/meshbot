@@ -32,14 +32,14 @@ class MessageQueue
             lines = f.readlines
             f.close
             sent = !(lines.last =~ /timed out/i) rescue false
-            $tx_bot.log("FAILED: #{lines.join("\n")}", :red) if !sent
+            $tx_bot.log("TX FAILED: #{lines.join("\n")}", :red) if !sent
             tries -= 1
-            $tx_bot.log("RETRYING...", :yellow) if !sent && tries > 0
+            $tx_bot.log("TX RETRYING...", :yellow) if !sent && tries > 0
           end
-          sent ? $tx_bot.log("SUCCESS!", :green) :
-                 $tx_bot.log("ABORTED!", :red)
+          sent ? $tx_bot.log("TX SENT!", :green) :
+                 $tx_bot.log("TX ABORTED!", :red)
         rescue Exception => e
-          $tx_bot.log "EXCEPTION: #{e}: #{e.backtrace}", :red
+          $tx_bot.log "TX EXCEPTION: #{e}: #{e.backtrace}", :red
         end
       end
     }
