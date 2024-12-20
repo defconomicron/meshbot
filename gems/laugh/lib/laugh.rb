@@ -1,4 +1,4 @@
-($TEXT_MESSAGE_HANDLERS ||= []) << Proc.new {|args| Laugh.new.msg if /^(haha|lol)$/i =~ args[:payload]}
+($TEXT_MESSAGE_HANDLERS ||= []) << Proc.new {|args| Laugh.new.msg if /^(hah|lol|lmao|heh)/i =~ args[:payload]}
 class Laugh
   def initialize
   end
