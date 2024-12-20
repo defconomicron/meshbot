@@ -35,7 +35,7 @@ class RxBot
         params_str = params_arr.join(' ')
         $TEXT_MESSAGE_HANDLERS.each {|proc|
           text = proc.call(bot: self, payload: payload, params_arr: params_arr, params_str: params_str, from: from, channel: channel)
-          $tx_bot.send_text(text, channel)
+          $tx_bot.send_text(text, channel) if text.present?
         }
       else
         log "RX: #{packet}"
