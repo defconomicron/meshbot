@@ -1,12 +1,19 @@
 ($COMMAND_KEYWORDS ||=[]) << '@reboot'
-($TEXT_MESSAGE_HANDLERS ||= []) << Proc.new {|args| Reboot.new.msg if /^@reboot/i =~ args[:payload]}
+($TEXT_MESSAGE_HANDLERS ||= []) << Proc.new {|args| Reboot.new(channel: args[:channel]).msg if /^@reboot/i =~ args[:payload]}
 class Reboot
-  def initialize
+  def initialize(options)
+    @channel = options[:channel]
   end
 
   def msg
-    Thread.new {sleep 30;MeshtasticCli.new(host: $rx_bot.host, name: $rx_bot.name).reboot}
-    Thread.new {sleep 30;MeshtasticCli.new(host: $tx_bot.host, name: $tx_bot.name).reboot}
-    'Rebooting...'
+    Thread.new {
+      # $rx_bot.send_text 'Rebooting...', @channel
+      sleep 30;MeshtasticCli.new(host: $rx_bot.host).reboot
+    }
+    Thread.new {
+      $tx_bot.send_text 'Rebooting...', @channel
+      sleep 30;MeshtasticCli.new(host: $tx_bot.host).reboot
+    }
+    nil
   end
 end

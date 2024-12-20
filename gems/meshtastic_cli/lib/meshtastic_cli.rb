@@ -4,11 +4,10 @@ require 'pty'
 class MeshtasticCli
   def initialize(options)
     @host = options[:host]
-    @name = options[:name]
   end
 
   def reboot
-    $log_it.log "[#{@name}] REBOOTING!", :red
+    $log_it.log "REBOOTING #{@host}!", :red
     `meshtastic --host #{@host} --reboot`
   end
 
@@ -16,7 +15,7 @@ class MeshtasticCli
     PTY.spawn("meshtastic --host #{@host} --listen") do |stdout, stdin, pid|
       packet = nil
       stdout.each do |line|
-        # $log_it.log "[#{@name}] RAW: #{line.strip}"
+        # $log_it.log "RAW: #{line.strip}"
         str = line.strip.force_encoding('UTF-8')
         if str =~ /DEBUG/
           packet = str << "\n"

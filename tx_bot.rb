@@ -3,10 +3,10 @@ class TxBot
 
   def initialize(options={})
     @name = options[:name]
-    $log_it.log "[#{@name}] Starting up!!!", :green
+    log "Starting up!!!", :green
     @thread = nil
     @host = options[:host]
-    $log_it.log "[#{@name}] Done!", :green
+    log "Done!", :green
   end
 
   def monitor
@@ -16,5 +16,9 @@ class TxBot
   def send_text(text, channel)
     return if text.nil? || text.length == 0
     @message_queue.messages << {text: text, channel: channel}
+  end
+
+  def log(text, color = nil)
+    $log_it.log "[#{@name}] #{text}", color
   end
 end
