@@ -9,10 +9,10 @@ class Greetings
       'Hello!',
       'Hi!',
       'Boop.. Beep.. Poop...',
-      "Hello! Welcome to LongFast. Please enjoy your stay and remember to be nice.",
+      "Hello! Welcome to this-here channel. Please enjoy your stay and remember to be nice.",
       "Hey!! Come on in the water's fine!",
       'Howdy!',
-      'Welcome to LongFast!',
+      'Welcome to this-here channel!',
     ].sample
   end
 end

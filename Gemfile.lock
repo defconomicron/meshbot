@@ -19,6 +19,11 @@ PATH
     eight_ball (0.0.1)
 
 PATH
+  remote: gems/google_ai
+  specs:
+    google_ai (0.0.1)
+
+PATH
   remote: gems/greetings
   specs:
     greetings (0.0.1)
@@ -277,6 +282,7 @@ DEPENDENCIES
   colorize
   eight_ball!
   embiggen (~> 1.6)
+  google_ai!
   greetings!
   help!
   ignore!

@@ -27,14 +27,16 @@ class MessageQueue
             gsub(/[^\w\s\.\?\!\'\:\-\;\/\@\=]/, '')
           sent = false
           tries = 5
+          $log_it.log "[#{name}] SENDING: #{text}", :green
           while !sent && tries > 0
-            $log_it.log "[#{name}] TX: #{text}", :green
             f = IO.popen("meshtastic --host #{host} --ch-index #{ch_index} --no-time --ack --sendtext \"#{text}\"")
             lines = f.readlines
             f.close
             sent = !(lines.last =~ /timed out/i) rescue false
-            $log_it.log("[#{name}] TIMEOUT: #{lines.join("\n")}", :red) if !sent
+            $log_it.log("[#{name}] FAILED: #{lines.join("\n")}", :red) if !sent
+            $log_it.log("[#{name}] SUCCESS!", :green) if sent
             tries -= 1
+            $log_it.log("[#{name}] RETRYING...", :yellow) if !sent && tries > 0
           end
         rescue Exception => e
           $log_it.log "[#{name}] EXCEPTION: #{e}: #{e.backtrace}", :red
