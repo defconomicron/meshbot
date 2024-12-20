@@ -26,20 +26,20 @@ class MessageQueue
             gsub(/[^\w\s\.\?\!\'\:\-\;\/\@\=\,\*]/, '')
           sent = false
           tries = 5
-          $tx_bot.log "TX: #{text}", :green
+          $tx_bot.log "TX CH-#{ch_index} SENDING: #{text}", :green
           while !sent && tries > 0
             f = IO.popen("meshtastic --host #{host} --ch-index #{ch_index} --no-time --ack --sendtext \"#{text}\"")
             lines = f.readlines
             f.close
             sent = !(lines.last =~ /timed out/i) rescue false
-            $tx_bot.log("TX FAILED: #{lines.join("\n")}", :red) if !sent
+            $tx_bot.log("TX CH-#{ch_index} FAILED: #{lines.join("\n")}", :red) if !sent
             tries -= 1
-            $tx_bot.log("TX RETRYING...", :yellow) if !sent && tries > 0
+            $tx_bot.log("TX CH-#{ch_index} RETRYING...", :yellow) if !sent && tries > 0
           end
-          sent ? $tx_bot.log("TX SENT!", :green) :
-                 $tx_bot.log("TX ABORTED!", :red)
+          sent ? $tx_bot.log("TX CH-#{ch_index} SENT!", :green) :
+                 $tx_bot.log("TX CH-#{ch_index} ABORTED!", :red)
         rescue Exception => e
-          $tx_bot.log "TX EXCEPTION: #{e}: #{e.backtrace}", :red
+          $tx_bot.log "TX CH-#{ch_index} EXCEPTION: #{e}: #{e.backtrace}", :red
         end
       end
     }

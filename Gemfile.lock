@@ -94,9 +94,9 @@ PATH
     message_queue (0.0.1)
 
 PATH
-  remote: gems/notice_setter
+  remote: gems/notice_manager
   specs:
-    notice_setter (0.0.1)
+    notice_manager (0.0.1)
 
 PATH
   remote: gems/ping
@@ -306,7 +306,7 @@ DEPENDENCIES
   meshtastic!
   meshtastic_cli!
   message_queue!
-  notice_setter!
+  notice_manager!
   ping!
   pry
   rack
