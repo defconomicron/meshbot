@@ -34,10 +34,11 @@ class MessageQueue
             f.close
             sent = !(lines.last =~ /timed out/i) rescue false
             $log_it.log("[#{name}] FAILED: #{lines.join("\n")}", :red) if !sent
-            $log_it.log("[#{name}] SUCCESS!", :green) if sent
             tries -= 1
             $log_it.log("[#{name}] RETRYING...", :yellow) if !sent && tries > 0
           end
+          $log_it.log("[#{name}] SUCCESS!", :green) if sent
+          $log_it.log("[#{name}] ABORTED!", :red) if !sent
         rescue Exception => e
           $log_it.log "[#{name}] EXCEPTION: #{e}: #{e.backtrace}", :red
         end
