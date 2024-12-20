@@ -7,6 +7,11 @@ class MeshtasticCli
     @name = options[:name]
   end
 
+  def reboot
+    $log_it.log "[#{@name}] REBOOTING!", :red
+    `meshtastic --host #{@host} --reboot`
+  end
+
   def packets(&block)
     PTY.spawn("meshtastic --host #{@host} --listen") do |stdout, stdin, pid|
       packet = nil
@@ -30,7 +35,5 @@ class MeshtasticCli
         end
       end
     end
-  rescue Exception => e
-    $log_it.log "[#{@name}] EXCEPTION: #{e}: #{e.backtrace}", :red
   end
 end

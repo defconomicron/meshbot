@@ -1,22 +1,21 @@
 ($COMMAND_KEYWORDS ||=[]) << '@joke'
-($TEXT_MESSAGE_HANDLERS ||= []) << Proc.new {|args| Joke.new(args[:bot], args[:channel]).msg if /^@joke/i =~ args[:payload]}
+($TEXT_MESSAGE_HANDLERS ||= []) << Proc.new {|args| Joke.new(args[:channel]).msg if /^@joke/i =~ args[:payload]}
 class Joke
   # SOURCE: https://www.fatherly.com/entertainment/funniest-poop-jokes-and-poop-puns-for-kids
   require 'csv'
   JOKES = CSV.read("#{File.dirname(__FILE__)}/jokes.csv")
 
-  def initialize(bot, channel)
-    @bot = bot
+  def initialize(channel)
     @channel = channel
   end
 
   def msg
-    return if @bot.thread.present? && @bot.thread.alive?
+    return if $tx_bot.thread.present? && $tx_bot.thread.alive?
     joke, answer = Joke::JOKES.sample
-    @bot.send_text(joke, @channel)
-    @bot.thread = Thread.new {
+    $tx_bot.send_text(joke, @channel)
+    $tx_bot.thread = Thread.new {
       sleep 30
-      @bot.send_text(answer, @channel)
+      $tx_bot.send_text(answer, @channel)
     } if answer.present?
     nil
   end

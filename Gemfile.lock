@@ -104,6 +104,11 @@ PATH
     ping (0.0.1)
 
 PATH
+  remote: gems/reboot
+  specs:
+    reboot (0.0.1)
+
+PATH
   remote: gems/riddle
   specs:
     riddle (0.0.1)
@@ -301,6 +306,7 @@ DEPENDENCIES
   pry
   rack
   rake
+  reboot!
   rexml
   riddle!
   seen!

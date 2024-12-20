@@ -14,20 +14,19 @@ class MessageQueue
           next
         end
         text = message[:text]
-        bot = message[:bot]
         channel = message[:channel]
         begin
-          name = bot.tx_name
-          host = bot.tx_host
+          name = $tx_bot.name
+          host = $tx_bot.host
           ch_index = channel
           text = text.split("\n").
             join(' ').
             truncate(228). # NOTE: Max string size is 231 characters
             gsub(/\"/, "'").
-            gsub(/[^\w\s\.\?\!\'\:\-\;\/\@\=]/, '')
+            gsub(/[^\w\s\.\?\!\'\:\-\;\/\@\=\,]/, '')
           sent = false
           tries = 5
-          $log_it.log "[#{name}] SENDING: #{text}", :green
+          $log_it.log "[#{name}] TX: #{text}", :green
           while !sent && tries > 0
             f = IO.popen("meshtastic --host #{host} --ch-index #{ch_index} --no-time --ack --sendtext \"#{text}\"")
             lines = f.readlines
@@ -37,8 +36,8 @@ class MessageQueue
             tries -= 1
             $log_it.log("[#{name}] RETRYING...", :yellow) if !sent && tries > 0
           end
-          $log_it.log("[#{name}] SUCCESS!", :green) if sent
-          $log_it.log("[#{name}] ABORTED!", :red) if !sent
+          sent ? $log_it.log("[#{name}] SUCCESS!", :green) :
+                 $log_it.log("[#{name}] ABORTED!", :red)
         rescue Exception => e
           $log_it.log "[#{name}] EXCEPTION: #{e}: #{e.backtrace}", :red
         end

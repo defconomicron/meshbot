@@ -9,35 +9,35 @@ $MAX_QUESTIONS = 25
 
   if /^@trivia/i =~ args[:payload]
     if args[:channel] != 3
-      args[:bot].send_text('To play trivia, you must first join the channel named "Trivia" with a PSK of "AQ=="', args[:channel])
+      $tx_bot.send_text('To play trivia, you must first join the channel named "Trivia" with a PSK of "AQ=="', args[:channel])
       next nil
     end
     if $TRIVIA.present?
-      args[:bot].send_text('Trivia is already running!', args[:channel])
+      $tx_bot.send_text('Trivia is already running!', args[:channel])
       next nil
     end
-    $TRIVIA = Trivia.new(bot: args[:bot], channel: args[:channel])
+    $TRIVIA = Trivia.new(channel: args[:channel])
     $QUESTION_NUMBER = 0
     $MAX_QUESTIONS = args[:params_str].present? && args[:params_str].to_i > 0 ? args[:params_str].to_i : $DEFAULT_MAX_QUESTIONS
     TriviaProfile.delete_all
-    args[:bot].send_text("New trivia game is about to start!", args[:channel])
-    args[:bot].send_text("The player with the most number of points after #{$MAX_QUESTIONS} questions wins!", args[:channel])
+    $tx_bot.send_text("New trivia game is about to start!", args[:channel])
+    $tx_bot.send_text("The player with the most number of points after #{$MAX_QUESTIONS} questions wins!", args[:channel])
     $TRIVIA.new_question
   end
 
   if /^@score|@points$/i =~ args[:payload]
     if $TRIVIA.nil?
-      args[:bot].send_text("Trivia has not yet started.", args[:channel])
+      $tx_bot.send_text("Trivia has not yet started.", args[:channel])
       next nil
     end
     node = Node.where(number: args[:from]).first_or_initialize
     points = node.trivia_profile.try(:points) || 0
-    args[:bot].send_text("Your score in trivia is currently: #{points}", args[:channel])
+    $tx_bot.send_text("Your score in trivia is currently: #{points}", args[:channel])
   end
 
   if /^@hint|@clue$/i =~ args[:payload]
     if $TRIVIA.nil?
-      args[:bot].send_text("Trivia has not yet started.", args[:channel])
+      $tx_bot.send_text("Trivia has not yet started.", args[:channel])
       next nil
     end
     clue = 'x' * trivia_answer.length
@@ -45,8 +45,8 @@ $MAX_QUESTIONS = 25
     clue[1] = trivia_answer[1]
     clue[2] = trivia_answer[2]
     cost = (trivia_answer.length / 2.0).round
-    args[:bot].send_text("You have purchased a clue for #{cost} points.", args[:channel])
-    args[:bot].send_text("Clue: #{clue}", args[:channel])
+    $tx_bot.send_text("You have purchased a clue for #{cost} points.", args[:channel])
+    $tx_bot.send_text("Clue: #{clue}", args[:channel])
     node = Node.where(number: args[:from]).first_or_initialize
     node.save
     trivia_profile = TriviaProfile.where(node_id: node.id).first_or_initialize
@@ -56,13 +56,13 @@ $MAX_QUESTIONS = 25
 
   if /^@next|@skip$/i =~ args[:payload]
     if $TRIVIA.nil?
-      args[:bot].send_text("Trivia has not yet started.", args[:channel])
+      $tx_bot.send_text("Trivia has not yet started.", args[:channel])
       next nil
     end
     $TAUNT_THREAD.exit if !$TAUNT_THREAD.nil? && $TAUNT_THREAD.alive?
     $TIMES_UP_THREAD.exit if !$TIMES_UP_THREAD.nil? && $TIMES_UP_THREAD.alive?
     $TRIVIA_ANSWER = nil
-    args[:bot].send_text("Question skipped!", args[:channel])
+    $tx_bot.send_text("Question skipped!", args[:channel])
     $TRIVIA.new_question
   end
 
@@ -76,8 +76,8 @@ $MAX_QUESTIONS = 25
     trivia_profile = TriviaProfile.where(node_id: node.id).first_or_initialize
     trivia_profile.points += trivia_answer.length
     trivia_profile.save
-    args[:bot].send_text("#{Trivia::WINNER_RESPONSES.sample} #{name} got the answer right!", args[:channel])
-    args[:bot].send_text("You now have #{trivia_profile.points} point(s)", args[:channel])
+    $tx_bot.send_text("#{Trivia::WINNER_RESPONSES.sample} #{name} got the answer right!", args[:channel])
+    $tx_bot.send_text("You now have #{trivia_profile.points} point(s)", args[:channel])
     $TRIVIA.new_question
   end
 
@@ -136,7 +136,6 @@ class Trivia
   ]
 
   def initialize(options)
-    @bot     = options[:bot]
     @channel = options[:channel]
   end
 
@@ -144,23 +143,23 @@ class Trivia
     $QUESTION_NUMBER += 1
 
     if $QUESTION_NUMBER <= $MAX_QUESTIONS
-      @bot.send_text("Get ready for question ##{$QUESTION_NUMBER}!", @channel)
+      $tx_bot.send_text("Get ready for question ##{$QUESTION_NUMBER}!", @channel)
     else
       $TRIVIA = nil
       $TRIVIA_ANSWER = nil
-      @bot.send_text("GAME OVER!! Preparing the results...", @channel)
+      $tx_bot.send_text("GAME OVER!! Preparing the results...", @channel)
       trivia_profiles = TriviaProfile.order('points desc')
-      @bot.send_text("Hmm... It looks like no one scored this round. Lol.  Better luck next time!", @channel) if trivia_profiles.empty?
+      $tx_bot.send_text("Hmm... It looks like no one scored this round. Lol.  Better luck next time!", @channel) if trivia_profiles.empty?
       trivia_profiles.each_with_index do |trivia_profile, i|
         node = trivia_profile.node
         name = [node.short_name, node.long_name].select(&:present?).join(': ').presence || "Node ##{node.number}"
         case i
-          when 0 then @bot.send_text("[1st Place]: #{name} with #{trivia_profile.points} points", @channel)
-          when 1 then @bot.send_text("[2nd Place]: #{name} with #{trivia_profile.points} points", @channel)
-          when 2 then @bot.send_text("[3rd Place]: #{name} with #{trivia_profile.points} points", @channel)
+          when 0 then $tx_bot.send_text("[1st Place]: #{name} with #{trivia_profile.points} points", @channel)
+          when 1 then $tx_bot.send_text("[2nd Place]: #{name} with #{trivia_profile.points} points", @channel)
+          when 2 then $tx_bot.send_text("[3rd Place]: #{name} with #{trivia_profile.points} points", @channel)
         end
       end
-      @bot.send_text("To play again, say @trivia", @channel)
+      $tx_bot.send_text("To play again, say @trivia", @channel)
       return
     end
 
@@ -173,16 +172,16 @@ class Trivia
     trivia_answer = $TRIVIA_ANSWER
 
     $log_it.log "TRIVIA_QUESTION = #{trivia_question} | TRIVIA_ANSWER = #{trivia_answer}"
-    @bot.send_text("For #{trivia_answer.length} points, #{trivia_question}", @channel)
+    $tx_bot.send_text("For #{trivia_answer.length} points, #{trivia_question}", @channel)
 
     $TAUNT_THREAD = Thread.new {
       sleep 60
-      @bot.send_text(Trivia::TAUNT_RESPONSES.sample, @channel)
+      $tx_bot.send_text(Trivia::TAUNT_RESPONSES.sample, @channel)
     }
 
     $TIMES_UP_THREAD = Thread.new {
       sleep 120
-      @bot.send_text("#{Trivia::LOSER_RESPONSES.sample}: #{trivia_answer}", @channel)
+      $tx_bot.send_text("#{Trivia::LOSER_RESPONSES.sample}: #{trivia_answer}", @channel)
       new_question
     }
   end

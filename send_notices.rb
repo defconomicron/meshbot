@@ -1,14 +1,12 @@
 require './config/environment.rb'
 $log_it = LogIt.new
-require './bot.rb'
+require './tx_bot.rb'
 settings = YAML.load_file('settings.yml')
 bot_settings = settings['bot']
 $log_it.log('ERROR: bot not defined in settings.yml', :red) if bot_settings.blank?
-bot = Bot.new(
-  rx_name: bot_settings['rx']['name'],
-  rx_host: bot_settings['rx']['host'],
-  tx_name: bot_settings['tx']['name'],
-  tx_host: bot_settings['tx']['host']
+bot = TxBot.new(
+  name: bot_settings['tx']['name'],
+  host: bot_settings['tx']['host']
 )
 Notice.order(:order).limit(3).each do |notice|
   bot.send_text(notice.message, 0)
