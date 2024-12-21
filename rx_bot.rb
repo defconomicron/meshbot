@@ -13,9 +13,6 @@ class RxBot
       next if !packet.is_a?(Hash)
       num = packet['num'] rescue nil
       from = packet['from'] rescue nil
-      channel = packet['channel'] rescue nil
-      decoded = packet['decoded'] rescue nil
-      payload = decoded['payload'] rescue nil
       time_now = Time.now
       node = Node.where(number: num.presence || from).first_or_initialize
       next if node.ignore?
@@ -41,7 +38,10 @@ class RxBot
       end
       node.save
       if packet.keys.include?('decoded')
-        log "RX: #{packet}"
+        channel = packet['channel'] rescue nil
+        decoded = packet['decoded'] rescue nil
+        payload = decoded['payload'] rescue nil
+        log "RX: #{packet}", :blue
         Message.create(channel: channel, node_id: node.id, message: payload)
         payload = "#{payload}".strip
         params_arr = [payload.split(' ')[1..-1]].compact.flatten
@@ -50,8 +50,6 @@ class RxBot
           text = proc.call(bot: self, payload: payload, params_arr: params_arr, params_str: params_str, from: from, channel: channel, node: node)
           $tx_bot.send_text(text, channel) if text.present?
         }
-      else
-        log "RX: #{packet}"
       end
     end
   rescue Exception => e
