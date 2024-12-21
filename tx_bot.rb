@@ -16,7 +16,6 @@ class TxBot
 
   def send_text(text, channel)
     return if text.nil? || text.length == 0
-    log("TX CH-#{channel} QUEUED: #{text}", :green)
     @message_queue.messages << {text: text, channel: channel}
   end
 
