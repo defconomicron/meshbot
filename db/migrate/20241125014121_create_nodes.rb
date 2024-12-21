@@ -9,8 +9,10 @@ class CreateNodes < ActiveRecord::Migration[7.2]
       t.string :hw_model
       t.string :node_id_from
       t.text :nodeinfo_snapshot
+      t.text :user_snapshot
       t.text :telemetry_snapshot
       t.text :position_snapshot
+      t.text :device_metrics_snapshot
       t.datetime :created_at
       t.datetime :updated_at
       t.datetime :ignored_at

@@ -20,15 +20,26 @@ class RxBot
       node = Node.where(number: num.presence || from).first_or_initialize
       next if node.ignore?
       if packet.keys.include?('user')
-        log "RX: #{packet}", :blue
-        node.attributes = {nodeinfo_snapshot: packet.to_json, updated_at: time_now}
-      elsif packet.keys.include?('position')
-        log "RX: #{packet}", :blue
-        node.attributes = {position_snapshot: packet.to_json, updated_at: time_now}
-      elsif packet.keys.include?('device_metrics')
-        log "RX: #{packet}", :blue
-        node.attributes = {telemetry_snapshot: packet.to_json, updated_at: time_now}
-      elsif packet.keys.include?('decoded')
+        nodeinfo_snapshot = packet.to_json
+        log "RX: #{nodeinfo_snapshot}", :blue
+        node.attributes = {nodeinfo_snapshot: nodeinfo_snapshot, updated_at: time_now}
+      end
+      if packet.keys.include?('user')
+        user_snapshot = packet['user'].to_json
+        log "RX: #{user_snapshot}", :blue
+        node.attributes = {user_snapshot: user_snapshot, updated_at: time_now}
+      end
+      if packet.keys.include?('position')
+        position_snapshot = packet['position'].to_json
+        log "RX: #{position_snapshot}", :blue
+        node.attributes = {position_snapshot: position_snapshot, updated_at: time_now}
+      end
+      if packet.keys.include?('device_metrics')
+        device_metrics_snapshot = packet['device_metrics'].to_json
+        log "RX: #{device_metrics_snapshot}", :blue
+        node.attributes = {device_metrics_snapshot: device_metrics_snapshot, updated_at: time_now}
+      end
+      if packet.keys.include?('decoded')
         log "RX: #{packet}"
         payload = "#{payload}".strip
         params_arr = [payload.split(' ')[1..-1]].compact.flatten

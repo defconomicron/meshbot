@@ -22,7 +22,7 @@ class MeshtasticCli
         elsif packet.present?
           packet << str << "\n"
         end
-        if packet.present? && str =~ /\}/
+        if packet.present? && str.blank?
           packet = case packet
             when /packet/ then packet.split('packet')[1].strip rescue ''
             when /node_info/ then packet.split('node_info')[1].strip rescue ''
