@@ -109,6 +109,11 @@ PATH
     reboot (0.0.1)
 
 PATH
+  remote: gems/recall
+  specs:
+    recall (0.0.1)
+
+PATH
   remote: gems/riddle
   specs:
     riddle (0.0.1)
@@ -312,6 +317,7 @@ DEPENDENCIES
   rack
   rake
   reboot!
+  recall!
   rexml
   riddle!
   seen!

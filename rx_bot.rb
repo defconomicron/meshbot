@@ -39,19 +39,20 @@ class RxBot
         log "RX: #{device_metrics_snapshot}", :blue
         node.attributes = {device_metrics_snapshot: device_metrics_snapshot, updated_at: time_now}
       end
+      node.save
       if packet.keys.include?('decoded')
         log "RX: #{packet}"
+        Message.create(channel: channel, node_id: node.id, message: payload)
         payload = "#{payload}".strip
         params_arr = [payload.split(' ')[1..-1]].compact.flatten
         params_str = params_arr.join(' ')
         $TEXT_MESSAGE_HANDLERS.each {|proc|
-          text = proc.call(bot: self, payload: payload, params_arr: params_arr, params_str: params_str, from: from, channel: channel)
+          text = proc.call(bot: self, payload: payload, params_arr: params_arr, params_str: params_str, from: from, channel: channel, node: node)
           $tx_bot.send_text(text, channel) if text.present?
         }
       else
         log "RX: #{packet}"
       end
-      node.save
     end
   rescue Exception => e
     log "EXCEPTION: #{e}: #{e.backtrace}", :red

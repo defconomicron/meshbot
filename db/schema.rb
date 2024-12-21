@@ -10,7 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_11_27_231648) do
+ActiveRecord::Schema[7.2].define(version: 2024_11_27_231649) do
+  create_table "messages", force: :cascade do |t|
+    t.integer "node_id"
+    t.string "channel"
+    t.string "message"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.index ["node_id"], name: "index_messages_on_node_id"
+  end
+
   create_table "nodes", force: :cascade do |t|
     t.string "number"
     t.string "long_name"
@@ -24,6 +33,8 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_27_231648) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "ignored_at"
+    t.text "user_snapshot"
+    t.text "device_metrics_snapshot"
   end
 
   create_table "notices", force: :cascade do |t|
@@ -31,6 +42,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_27_231648) do
     t.string "message"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string "channel"
   end
 
   create_table "trivia_profiles", force: :cascade do |t|
