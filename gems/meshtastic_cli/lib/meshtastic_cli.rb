@@ -15,7 +15,7 @@ class MeshtasticCli
     PTY.spawn("meshtastic --host #{@host} --listen") do |stdout, stdin, pid|
       packet = nil
       stdout.each do |line|
-        # $log_it.log "RAW: #{line.strip}"
+        $log_it.log "RAW: #{line.strip}"
         str = line.strip.force_encoding('UTF-8')
         if str =~ /DEBUG/
           packet = str << "\n"
