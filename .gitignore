@@ -1,0 +1,5 @@
+log.txt
+settings.yml
+*sqlite*
+trivia.dat
+Gemfile.lock
