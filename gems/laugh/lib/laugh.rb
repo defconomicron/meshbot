@@ -16,6 +16,7 @@ class Laugh
       ';/',
       ';P'
     ]
+    laughs += ['']*laughs.length
     laughs << 'HO! HO! HO!' if Time.now.strftime('%m') == '12'
     laughs.sample
   end
