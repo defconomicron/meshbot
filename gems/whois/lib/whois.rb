@@ -28,7 +28,7 @@ class Whois
     str1 << "short_name = #{short_name}" if short_name.present?
     str1 << "long_name = #{long_name}" if long_name.present?
     str1 << "hw_model = #{hw_model}" if hw_model.present?
-    str1 << "hw_model = #{macaddr}" if macaddr.present?
+    str1 << "macaddr = #{macaddr}" if macaddr.present?
     str1 << "last_heard = #{Time.at(last_heard.to_i).human}" if last_heard.present?
     str1 << "snr = #{snr}" if snr.present?
     str1 << "uptime = #{uptime_seconds}" if uptime_seconds.present?
