@@ -31,7 +31,7 @@ class Whois
     str << "macaddr = #{macaddr}" if macaddr.present?
     str << "last_heard = #{Time.at(last_heard.to_i).human}" if last_heard.present?
     str << "snr = #{snr}" if snr.present?
-    str << "uptime = #{uptime_seconds}" if uptime_seconds.present?
+    str << "uptime_seconds = #{uptime_seconds}" if uptime_seconds.present?
     str << "battery_level = #{battery_level}" if battery_level.present?
     str << "voltage = #{voltage}" if voltage.present?
     str << "channel_utilization = #{channel_utilization}" if channel_utilization.present?
@@ -40,7 +40,7 @@ class Whois
     str << "latitude_i = #{latitude_i}" if latitude_i.present?
     str << "longitude_i = #{longitude_i}" if longitude_i.present?
     slices = []
-    str.each_slice(5).each do |_slice|
+    str.each_slice(7).each do |_slice|
       slices << _slice.join(' | ').strip
     end
     slices
