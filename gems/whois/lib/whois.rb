@@ -24,25 +24,25 @@ class Whois
     hops_away = nodeinfo_snapshot['hops_away'] rescue nil
     latitude_i = nodeinfo_snapshot['position']['latitude_i'] rescue nil
     longitude_i = nodeinfo_snapshot['position']['longitude_i'] rescue nil
-    str1 = []
-    str1 << "short_name = #{short_name}" if short_name.present?
-    str1 << "long_name = #{long_name}" if long_name.present?
-    str1 << "hw_model = #{hw_model}" if hw_model.present?
-    str1 << "macaddr = #{macaddr}" if macaddr.present?
-    str1 << "last_heard = #{Time.at(last_heard.to_i).human}" if last_heard.present?
-    str1 << "snr = #{snr}" if snr.present?
-    str1 << "uptime = #{uptime_seconds}" if uptime_seconds.present?
-    str2 = []
-    str2 << "battery_level = #{battery_level}" if battery_level.present?
-    str2 << "voltage = #{voltage}" if voltage.present?
-    str2 << "channel_utilization = #{channel_utilization}" if channel_utilization.present?
-    str2 << "air_util_tx = #{air_util_tx}" if air_util_tx.present?
-    str2 << "hops_away = #{hops_away}" if hops_away.present?
-    str2 << "latitude_i = #{latitude_i}" if latitude_i.present?
-    str2 << "longitude_i = #{longitude_i}" if longitude_i.present?
-    [
-      str1.join(' | ').strip,
-      str2.join(' | ').strip
-    ]
+    str = []
+    str << "short_name = #{short_name}" if short_name.present?
+    str << "long_name = #{long_name}" if long_name.present?
+    str << "hw_model = #{hw_model}" if hw_model.present?
+    str << "macaddr = #{macaddr}" if macaddr.present?
+    str << "last_heard = #{Time.at(last_heard.to_i).human}" if last_heard.present?
+    str << "snr = #{snr}" if snr.present?
+    str << "uptime = #{uptime_seconds}" if uptime_seconds.present?
+    str << "battery_level = #{battery_level}" if battery_level.present?
+    str << "voltage = #{voltage}" if voltage.present?
+    str << "channel_utilization = #{channel_utilization}" if channel_utilization.present?
+    str << "air_util_tx = #{air_util_tx}" if air_util_tx.present?
+    str << "hops_away = #{hops_away}" if hops_away.present?
+    str << "latitude_i = #{latitude_i}" if latitude_i.present?
+    str << "longitude_i = #{longitude_i}" if longitude_i.present?
+    slices = []
+    str.each_slice(5).each do |_slice|
+      slices << _slice.join(' | ').strip
+    end
+    slices
   end
 end
