@@ -43,6 +43,7 @@ class MessageQueue
             join(' ').
             truncate(228). # NOTE: Max string size is 231 characters
             gsub(/\"/, "'")
+          text = Censor.new(text).apply
           f = IO.popen("#{$meshtastic_path} --host #{$tx_bot.host} --ch-index #{ch_index} --no-time --ack --sendtext \"#{text}\"")
           lines = f.readlines
           f.close
