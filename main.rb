@@ -10,5 +10,6 @@ $log_it.log('ERROR: bot not defined in settings.yml', :red) if $settings['bot'].
 $tx_bot = TxBot.new(name: $settings['bot']['tx']['name'], host: $settings['bot']['tx']['host'])
 $rx_bot = RxBot.new(name: $settings['bot']['rx']['name'], host: $settings['bot']['rx']['host'])
 $tx_bot.monitor
-$rx_bot.monitor
 NoticesBot.new.monitor
+$rx_bot.monitor
+while true;sleep 1;end;
