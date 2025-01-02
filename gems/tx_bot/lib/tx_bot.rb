@@ -11,6 +11,7 @@ class TxBot
   def monitor
     @message_queue = MessageQueue.new
     @message_queue.start
+    self
   end
 
   def send_text(text, ch_index)
