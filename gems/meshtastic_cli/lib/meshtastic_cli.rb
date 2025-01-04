@@ -17,6 +17,7 @@ class MeshtasticCli
       stdout.each do |line|
         $log_it.log "RAW: #{line.strip}"
         str = line.strip.force_encoding('UTF-8')
+        raise Exception.new(str) if error?(str)
         if str =~ /DEBUG/
           response = str << "\n"
         elsif response.present?
@@ -34,5 +35,15 @@ class MeshtasticCli
         end
       end
     end
+  end
+
+  def error?(str)
+    # str.to_s =~ /connection reset by peer/i ||
+    # str.to_s =~ /timed out waiting for/i ||
+    # str.to_s =~ /error connecting to/i ||
+    # str.to_s =~ /aborting due to/i ||
+    # str.to_s =~ /broken pipe/i
+    str =~ /BrokenPipeError/i ||
+    str =~ /Connection reset by peer/i
   end
 end

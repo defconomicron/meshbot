@@ -11,5 +11,5 @@ $tx_bot = TxBot.new(name: $settings['bot']['tx']['name'], host: $settings['bot']
 $rx_bot = RxBot.new(name: $settings['bot']['rx']['name'], host: $settings['bot']['rx']['host'])
 $tx_bot.monitor
 $rx_bot.monitor
-NoticesBot.new.monitor
+# NoticesBot.new.monitor
 while true;sleep 1;end;

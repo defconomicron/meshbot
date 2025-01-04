@@ -14,7 +14,7 @@ class RxBot
         MeshtasticCli.new(host: @host, name: @name).responses do |response|
           packet = response
           next if !packet.is_a?(Hash)
-          raise Exception.new(packet.to_s) if error?(packet)
+          # raise Exception.new(packet.to_s) if error?(packet)
           node = Node.where(number: packet['num'].presence || packet['from']).first_or_initialize
           next if node.ignore?
           next if node.short_name == $tx_bot.name
@@ -65,13 +65,13 @@ class RxBot
     self
   end
 
-  def error?(packet)
-    packet.to_s =~ /connection reset by peer/i ||
-    packet.to_s =~ /timed out waiting for/i ||
-    packet.to_s =~ /error connecting to/i ||
-    packet.to_s =~ /aborting due to/i ||
-    packet.to_s =~ /broken pipe/i
-  end
+  # def error?(packet)
+  #   packet.to_s =~ /connection reset by peer/i ||
+  #   packet.to_s =~ /timed out waiting for/i ||
+  #   packet.to_s =~ /error connecting to/i ||
+  #   packet.to_s =~ /aborting due to/i ||
+  #   packet.to_s =~ /broken pipe/i
+  # end
 
   def log(text, color = nil)
     $log_it.log "[#{@name}] #{text}", color
