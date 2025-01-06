@@ -7,23 +7,23 @@ class MeshtasticCli
   end
 
   def reboot
-    $log_it.log "REBOOTING #{@host}!", :red
+    $rx_bot.log "REBOOTING #{@host}!", :red
     `#{$meshtastic_path} --host #{@host} --reboot`
   end
 
   def responses(&block)
-    $log_it.log 'IGNORING RESPONSES FOR 30 SECONDS...', :yellow
+    $rx_bot.log 'IGNORING RESPONSES FOR 30 SECONDS...', :yellow
     deaf = true
     Thread.new {
       sleep 30
       deaf = false
-      puts 'NO LONGER IGNORING RESPONSES!', :yellow
+      $rx_bot.log 'NO LONGER IGNORING RESPONSES!', :yellow
     }
     PTY.spawn("#{$meshtastic_path} --host #{@host} --listen") do |stdout, stdin, pid|
       response = nil
       stdout.each do |line|
         next if deaf
-        $log_it.log "RAW: #{line.strip}"
+        $rx_bot.log "RAW: #{line.strip}"
         str = line.strip.force_encoding('UTF-8')
         raise Exception.new(str) if error?(str)
         if str =~ /DEBUG/
