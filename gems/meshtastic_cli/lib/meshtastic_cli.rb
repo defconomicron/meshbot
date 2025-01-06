@@ -12,12 +12,12 @@ class MeshtasticCli
   end
 
   def responses(&block)
-    $log_it.log 'Ignoring responses for 30 seconds...', :yellow
+    $log_it.log 'IGNORING RESPONSES FOR 30 SECONDS...', :yellow
     deaf = true
     Thread.new {
       sleep 30
       deaf = false
-      puts 'No longer ignoring responses!', :yellow
+      puts 'NO LONGER IGNORING RESPONSES!', :yellow
     }
     PTY.spawn("#{$meshtastic_path} --host #{@host} --listen") do |stdout, stdin, pid|
       response = nil
