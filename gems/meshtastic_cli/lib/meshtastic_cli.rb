@@ -12,9 +12,17 @@ class MeshtasticCli
   end
 
   def responses(&block)
+    $log_it.log 'Ignoring responses for 30 seconds...', :yellow
+    deaf = true
+    Thread.new {
+      sleep 30
+      deaf = false
+      puts 'No longer ignoring responses!', :yellow
+    }
     PTY.spawn("#{$meshtastic_path} --host #{@host} --listen") do |stdout, stdin, pid|
       response = nil
       stdout.each do |line|
+        next if deaf
         $log_it.log "RAW: #{line.strip}"
         str = line.strip.force_encoding('UTF-8')
         raise Exception.new(str) if error?(str)
