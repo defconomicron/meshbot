@@ -1,4 +1,4 @@
-($TEXT_MESSAGE_HANDLERS ||= []) << Proc.new {|args| Test.new.msg if /^test/i =~ args[:payload]}
+($TEXT_MESSAGE_HANDLERS ||= []) << Proc.new {|args| Test.new.msg if /^test$/i =~ args[:payload]}
 class Test
   def initialize
   end

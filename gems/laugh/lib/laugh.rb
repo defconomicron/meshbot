@@ -17,7 +17,7 @@ class Laugh
       ';P'
     ]
     laughs << 'HO! HO! HO!' if Time.now.strftime('%m') == '12'
-    laughs += ['']*laughs.length*2
+    laughs += [''] * laughs.length*3
     laughs.sample
   end
 end
