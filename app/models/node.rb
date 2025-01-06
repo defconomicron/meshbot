@@ -26,7 +26,7 @@ class Node < ActiveRecord::Base
   end
 
   def latitude
-    latitude_i / 10000000.0
+    latitude_i / 10000000.0 rescue nil
   end
 
   def longitude_i
@@ -34,6 +34,6 @@ class Node < ActiveRecord::Base
   end
 
   def longitude
-    longitude_i / 10000000.0
+    longitude_i / 10000000.0 rescue nil
   end
 end
