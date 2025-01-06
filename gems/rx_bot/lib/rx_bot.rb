@@ -15,8 +15,7 @@ class RxBot
           packet = response
           next if !packet.is_a?(Hash)
           node = Node.where(number: packet['num'].presence || packet['from']).first_or_initialize
-          next if node.ignore?
-          next if node.short_name == $tx_bot.name
+          next if node.ignore? || node.short_name == $tx_bot.name
           if packet.keys.include?('user')
             nodeinfo_snapshot = packet.to_json
             log "RX: #{nodeinfo_snapshot}", :blue
