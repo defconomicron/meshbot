@@ -1,9 +1,9 @@
 class TxBot
-  attr_accessor :thread, :name, :host, :message_queue
+  attr_accessor :thread, :name, :host
 
   def initialize(options={})
     @name = options[:name]
-    log 'INITIALIZING!', :green
+    log 'INITIALIZING...', :green
     @host = options[:host]
     log 'DONE!', :green
   end
