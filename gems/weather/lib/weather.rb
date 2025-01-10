@@ -7,6 +7,7 @@ class Weather
 
   def msg
     return "Sorry, I don't quite know you just yet to be able to give you an accurate weather report.  Try again later on!" if @node.new_record?
+    return "Sorry, I don't quite know where you're currently located.  Try again later." if @node.latitude.blank? || @node.longitude.blank?
     points_api_url = "https://api.weather.gov/points/#{@node.latitude.try(:round, 4)},#{@node.longitude.try(:round, 4)}"
     response = JSON.parse(`curl #{points_api_url}`)
     forecast_hourly_api_url = response['properties']['forecastHourly']
