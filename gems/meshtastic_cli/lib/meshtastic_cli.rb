@@ -12,7 +12,7 @@ class MeshtasticCli
   end
 
   def get_value(str, key)
-    str.scan(/['"]*#{key}['"]*: ['"]*(.*?)['"]*([,]|$)/).flatten.first rescue nil
+    str.scan(/['"]*#{key}['"]*: ['"]*(.*?)['"]*([,\s]|$)/).flatten.first rescue nil
   end
 
   def responses(&block)
@@ -27,7 +27,7 @@ class MeshtasticCli
       response = ''
       stdout.each do |line|
         next if deaf
-        # $rx_bot.log "RAW: #{line.strip}"
+        $rx_bot.log "RAW: #{line.strip}"
         line = line.strip.force_encoding('UTF-8')
         raise Exception.new(line) if error?(line)
         if line =~ /DEBUG/ && response.present?
@@ -66,7 +66,7 @@ class MeshtasticCli
             uptime_seconds:      get_value(response, 'uptime_seconds').presence || get_value(response, 'uptimeSeconds'),
             payload:             get_value(response, 'payload')
           }.select {|k,v| v.present?}.with_indifferent_access
-          yield _response if response.present? && response =~ /packet {/
+          yield _response if response.present? && response =~ /packet=/
           response = ''
         end
         response << line << "\n"
