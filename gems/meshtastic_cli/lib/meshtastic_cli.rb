@@ -64,7 +64,7 @@ class MeshtasticCli
             channel_utilization: get_value(response, 'channel_utilization').presence || get_value(response, 'channelUtilization'),
             air_util_tx:         get_value(response, 'air_util_tx').presence || get_value(response, 'airUtilTx'),
             uptime_seconds:      get_value(response, 'uptime_seconds').presence || get_value(response, 'uptimeSeconds'),
-            payload:             get_value(response, 'payload')
+            payload:             get_value(response, 'payload').try(:gsub, /^b'/,'')
           }.select {|k,v| v.present?}.with_indifferent_access
           yield _response if response.present? && response =~ /packet=/
           response = ''
