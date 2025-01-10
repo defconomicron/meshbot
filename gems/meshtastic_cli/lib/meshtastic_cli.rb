@@ -12,7 +12,7 @@ class MeshtasticCli
   end
 
   def get_value(str, key)
-    str.scan(/['"]?#{key}['"]?: ['"]?(.*?)['"]?([\,\s\n\}]|$)/).flatten.first rescue nil
+    str.scan(/['"]*#{key}['"]*: ['"]*(.*?)['"]*([,]|$)/).flatten.first rescue nil
   end
 
   def responses(&block)
