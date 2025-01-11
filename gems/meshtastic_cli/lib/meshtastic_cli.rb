@@ -12,7 +12,7 @@ class MeshtasticCli
   end
 
   def get_value(str, key)
-    str.scan(/['"]*#{key}['"]*: ['"]*(.*?)['"]*([,\s]|$)/).flatten.first rescue nil
+    str.scan(/['"]*#{key}['"]*: ['"]*(.*?)['"]*([,]|$)/).flatten.first rescue nil
   end
 
   def responses(&block)
@@ -79,3 +79,9 @@ class MeshtasticCli
     str =~ /Connection reset by peer/i
   end
 end
+
+# str= %{DEBUG file:mesh_interface.py _handlePacketFromRadio line:1383 Publishing meshtastic.receive.text: packet={'from': 3324404670, 'to': 4294967295, 'channel': 3, 'decoded': {'portnum': 'TEXT_MESSAGE_APP', 'payload': 'test test2', 'bitfield': 1, 'text': 'test'}, 'id': 2930876435, 'rxTime': 1736559326, 'priority': 'HIGH', 'viaMqtt': True, 'hopStart': 3, 'raw': from: 3324404670 to: 4294967295 channel: 3 decoded { portnum: TEXT_MESSAGE_APP payload: "test" bitfield: 1 } id: 2930876435 rx_time: 1736559326 priority: HIGH via_mqtt: true hop_start: 3 , 'fromId': '!c62663be', 'toId': '^all'}}
+# result = str.scan(/['"]*#{key}['"]*: ['"]*(.*?)['"]*([,]|$)/).flatten.first rescue nil
+# result == 'test test2'
+# result = str.scan(/['"]*#{key}['"]*: ['"]*(.*?)['"]*([,\s]|$)/).flatten.first rescue nil
+# result == 'test test2'
