@@ -8,7 +8,7 @@ $MAX_QUESTIONS = 25
   trivia_answer = $TRIVIA_ANSWER
 
   if /^@trivia/i =~ args[:payload]
-    if args[:ch_index] != 2
+    if args[:ch_index].to_i != 2
       $tx_bot.send_text('To play trivia, you must first join the channel named "Trivia" with a PSK of "AQ=="', args[:ch_index])
       next nil
     end
