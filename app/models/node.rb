@@ -21,19 +21,11 @@ class Node < ActiveRecord::Base
     ignored_at.present?
   end
 
-  def latitude_i
-    JSON.parse(position_snapshot)['latitude_i'] rescue nil
-  end
-
   def latitude
-    latitude_i / 10000000.0 rescue nil
-  end
-
-  def longitude_i
-    JSON.parse(position_snapshot)['longitude_i'] rescue nil
+    JSON.parse(position_snapshot)['latitude'] rescue nil
   end
 
   def longitude
-    longitude_i / 10000000.0 rescue nil
+    JSON.parse(position_snapshot)['longitude'] rescue nil
   end
 end
