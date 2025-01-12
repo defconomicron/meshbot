@@ -33,20 +33,20 @@ class Whois
     str << "long_name = #{long_name}" if long_name.present?
     str << "hw_model = #{hw_model}" if hw_model.present?
     str << "macaddr = #{macaddr}" if macaddr.present?
-    str << "rx_time = #{Time.at(rx_time.to_i).human}" if rx_time.present?
-    str << "rx_snr = #{rx_snr}" if rx_snr.present?
-    str << "rx_rssi = #{rx_rssi}" if rx_rssi.present?
+    str << "time = #{Time.at(rx_time.to_i).human}" if rx_time.present?
+    str << "snr = #{rx_snr}" if rx_snr.present?
+    str << "rssi = #{rx_rssi}" if rx_rssi.present?
     str << "via_mqtt = #{via_mqtt}" if via_mqtt.present?
     str << "hop_start = #{hop_start}" if hop_start.present?
-    str << "uptime_seconds = #{uptime_seconds}" if uptime_seconds.present?
-    str << "battery_level = #{battery_level}" if battery_level.present?
-    str << "voltage = #{voltage}" if voltage.present?
-    str << "channel_utilization = #{channel_utilization}" if channel_utilization.present?
+    str << "uptime = #{uptime_seconds}" if uptime_seconds.present?
+    str << "battery = #{battery_level}" if battery_level.present?
+    str << "volts = #{voltage}" if voltage.present?
+    str << "chan_util = #{channel_utilization}" if channel_utilization.present?
     str << "air_util_tx = #{air_util_tx}" if air_util_tx.present?
-    str << "latitude = #{latitude}" if latitude.present?
-    str << "longitude = #{longitude}" if longitude.present?
+    str << "lati = #{latitude}" if latitude.present?
+    str << "long = #{longitude}" if longitude.present?
     slices = []
-    str.each_slice(7).each do |_slice|
+    str.each_slice(8).each do |_slice|
       slices << _slice.join(' | ').strip
     end
     slices
