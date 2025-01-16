@@ -1,6 +1,7 @@
 namespace :command do
   desc 'Deploy'
   task :deploy do
+    puts 'Deploying...'
     f = IO.popen('ssh kd5ef@192.168.1.49', 'r+')
     f.puts 'git -C meshbot pull || git clone https://github.com/defconomicron/meshbot.git'
     f.puts 'sudo chown -R kd5ef:kd5ef /home/kd5ef/meshbot'
@@ -15,5 +16,6 @@ namespace :command do
     puts 'Done!'
     puts 'Server response:'
     puts f.readlines
+    puts 'Finished deploying!'
   end
 end
