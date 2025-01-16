@@ -7,3 +7,4 @@ git -C "$(rbenv root)"/plugins/ruby-build pull
 sudo apt update
 sudo apt install git curl libssl-dev libreadline-dev zlib1g-dev autoconf bison build-essential libyaml-dev libreadline-dev libncurses5-dev libffi-dev libgdbm-dev
 rbenv install 3.3.6
+https://meshtastic.org/docs/software/python/cli/installation/
