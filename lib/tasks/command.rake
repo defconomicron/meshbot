@@ -10,11 +10,9 @@ namespace :command do
     f.puts '/home/kd5ef/.rbenv/shims/bundle'
     f.puts '/home/kd5ef/.rbenv/shims/rake db:migrate'
     f.puts 'pkill -f main.rb'
-    sleep 5
+    f.puts 'sleep 5'
     f.puts '/home/kd5ef/.rbenv/shims/ruby main.rb'
     f.close_write
-    puts 'Done!'
-    puts 'Server response:'
     puts f.readlines
     puts 'Finished deploying!'
   end
