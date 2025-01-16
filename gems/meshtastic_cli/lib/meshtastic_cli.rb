@@ -27,7 +27,7 @@ class MeshtasticCli
       response = ''
       stdout.each do |line|
         next if deaf
-        $rx_bot.log "RAW: #{line.strip}"
+        # $rx_bot.log "RAW: #{line.strip}"
         line = line.strip.force_encoding('UTF-8')
         raise Exception.new(line) if error?(line)
         if line =~ /DEBUG/ && response.present?

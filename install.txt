@@ -1,0 +1,9 @@
+sudo apt install git-all
+git clone https://github.com/rbenv/rbenv.git ~/.rbenv
+~/.rbenv/bin/rbenv init
+git clone https://github.com/rbenv/ruby-build.git "$(rbenv root)"/plugins/ruby-build
+git -C "$(rbenv root)"/plugins/ruby-build pull
+#RUBY_CONFIGURE_OPTS="--with-openssl-dir=/home/kd5ef/.rbenv/versions/3.3.6/openssl --target=arm-linux --host=arm-linux" rbenv install 3.3.6
+sudo apt update
+sudo apt install git curl libssl-dev libreadline-dev zlib1g-dev autoconf bison build-essential libyaml-dev libreadline-dev libncurses5-dev libffi-dev libgdbm-dev
+rbenv install 3.3.6
