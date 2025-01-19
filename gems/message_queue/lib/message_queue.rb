@@ -45,12 +45,12 @@ class MessageQueue
             gsub(/\"/, "'")
           text = Censor.new(text).apply
           f = IO.popen("#{$meshtastic_path} --host #{$tx_bot.host} --ch-index #{ch_index} --no-time --ack --sendtext \"#{text}\"")
-          lines = f.readlines
+          response = f.readlines.join("\n")
           f.close
-          log lines.last
-          tries = 0 if lines.last =~ /data payload too big/i
-          sent = lines.last =~ /received an implicit ack/i
-          raise Exception.new(lines.join("\n")) if !sent
+          log response
+          tries = 0 if response =~ /data payload too big/i
+          sent = response =~ /received an implicit ack/i
+          raise Exception.new(response) if !sent
           log "TX CH-#{ch_index} SENT!", :green
         rescue Exception => e
           log "TX CH-#{ch_index} EXCEPTION: #{e}: #{e.backtrace}", :red
@@ -59,8 +59,9 @@ class MessageQueue
             log "TX CH-#{ch_index} RETRYING...", :yellow
             retry
           else
-            $tx_bot.send_text('Your command could not be run because an error has occurred.', ch_index)
-            log "TX CH-#{ch_index} ABORTED!", :red
+            log "TX CH-#{ch_index} SHUTTING DOWN!", :red
+            sleep 30
+            exit
           end
         end
       end
