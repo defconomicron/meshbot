@@ -47,7 +47,7 @@ class MessageQueue
           f = IO.popen("#{$meshtastic_path} --host #{$tx_bot.host} --ch-index #{ch_index} --no-time --ack --sendtext \"#{text}\"")
           response = f.readlines.join("\n")
           f.close
-          log response
+          log "MESHCLI RESPONSE: #{response}"
           tries = 0 if response =~ /data payload too big/i
           sent = response =~ /received an implicit ack/i
           raise Exception.new(response) if !sent
