@@ -56,7 +56,7 @@ class MessageQueue
           log "TX CH-#{ch_index} EXCEPTION: #{e}: #{e.backtrace}", :red
           if tries > 0
             tries -= 1
-            log "TX CH-#{ch_index} RETRYING...", :yellow
+            log "TX CH-#{ch_index} RETRYING... [#{tries} remaining]", :yellow
             retry
           else
             log "TX CH-#{ch_index} ABORTED!", :red
