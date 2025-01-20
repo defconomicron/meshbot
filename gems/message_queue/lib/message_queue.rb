@@ -59,9 +59,7 @@ class MessageQueue
             log "TX CH-#{ch_index} RETRYING...", :yellow
             retry
           else
-            log "TX CH-#{ch_index} SHUTTING DOWN!", :red
-            sleep 30
-            exit
+            log "TX CH-#{ch_index} ABORTED!", :red
           end
         end
       end
