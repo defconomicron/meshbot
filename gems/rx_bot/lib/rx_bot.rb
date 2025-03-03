@@ -18,9 +18,10 @@ class RxBot
           next if node.ignore? || node.short_name == $tx_bot.name
           node.updated_at = Time.now
           node.save
+          rx_name = [node.short_name, node.long_name].select(&:present?).join(' - ').presence || 'UNKNOWN'
           case response['portnum']
             when 'TEXT_MESSAGE_APP'
-              log "RX: #{response}", :blue
+              log "[#{rx_name}]: #{response}", :blue
               ch_index = channel = response['channel'] rescue nil
               payload = response['payload'] rescue nil
               ch_index ||= 0
@@ -34,19 +35,19 @@ class RxBot
                 end
               }
             when 'POSITION_APP'
-              log "RX: #{response}", :blue
+              log "[#{rx_name}]: #{response}", :blue
               node.position_snapshot = response.to_json
               node.save
             when 'TELEMETRY_APP'
-              log "RX: #{response}", :blue
+              log "[#{rx_name}]: #{response}", :blue
               node.telemetry_snapshot = response.to_json
               node.save
             when 'NODEINFO_APP'
-              log "RX: #{response}", :blue
+              log "[#{rx_name}]: #{response}", :blue
               node.nodeinfo_snapshot = response.to_json
               node.save
             else
-              log "RX: #{response}", :black
+              log "[#{rx_name}]: #{response}", :black
           end
         end
       rescue Exception => e
