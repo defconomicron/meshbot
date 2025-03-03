@@ -48,9 +48,9 @@ class MessageQueue
           response = f.readlines.join("\n")
           f.close
           log "MESH_CLI: #{response}"
-          # tries = 0 if response =~ /data payload too big/i
-          # sent = response =~ /received an implicit ack/i
-          # raise Exception.new(response) if !sent
+          tries = 0 if response =~ /data payload too big/i
+          sent = response =~ /received an implicit ack/i
+          raise Exception.new(response) if !sent
           log "TX CH-#{ch_index} SENT!", :green
         rescue Exception => e
           log "TX CH-#{ch_index} EXCEPTION: #{e}: #{e.backtrace}", :red
