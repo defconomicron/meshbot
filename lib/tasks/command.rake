@@ -2,7 +2,7 @@ namespace :command do
   desc 'Deploy'
   task :deploy do
     puts 'Deploying...'
-    f = IO.popen('ssh kd5ef@192.168.1.49', 'r+')
+    f = IO.popen('ssh kd5ef@192.168.1.52', 'r+')
     f.puts 'git config core.filemode false'
     f.puts 'git -C meshbot pull || git clone https://github.com/defconomicron/meshbot.git'
     f.puts 'sudo chown -R kd5ef:kd5ef /home/kd5ef/meshbot'
