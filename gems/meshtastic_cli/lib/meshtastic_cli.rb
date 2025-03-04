@@ -16,17 +16,10 @@ class MeshtasticCli
   end
 
   def responses(&block)
-    $rx_bot.log 'IGNORING RESPONSES FOR 30 SECONDS...', :yellow
-    deaf = true
-    Thread.new {
-      sleep 30
-      deaf = false
-      $rx_bot.log 'NO LONGER IGNORING RESPONSES!', :yellow
-    }
+
     PTY.spawn("#{$meshtastic_path} --host #{@host} --listen") do |stdout, stdin, pid|
       response = ''
       stdout.each do |line|
-        next if deaf
         # $rx_bot.log "RAW: #{line.strip}"
         line = line.strip.force_encoding('UTF-8')
         raise Exception.new(line) if error?(line)

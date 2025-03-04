@@ -9,6 +9,13 @@ class RxBot
   end
 
   def monitor
+    $rx_bot.log 'IGNORING RESPONSES FOR 30 SECONDS...', :yellow
+    deaf = true
+    Thread.new {
+      sleep 30
+      deaf = false
+      $rx_bot.log 'NO LONGER IGNORING RESPONSES!', :yellow
+    }
     Thread.new {
       begin
         ignore = []
@@ -16,7 +23,7 @@ class RxBot
           next if !response.is_a?(Hash)
           next if response['num'].blank? && response['from'].blank?
           node = Node.where(number: response['num'].presence || response['from']).first_or_initialize
-          ignore << node.number if node.ignore? || node.short_name == $tx_bot.name
+          ignore << node.number if node.ignore? || node.short_name == $tx_bot.name || deaf
           node.updated_at = Time.now
           node.save
           rx_name = [node.short_name, node.long_name].select(&:present?).join(' - ').presence || 'UNKNOWN'
