@@ -11,16 +11,28 @@ class RxBot
   def monitor
     Thread.new {
       begin
+        ignore = []
         MeshtasticCli.new(host: @host, name: @name).responses do |response|
           next if !response.is_a?(Hash)
           next if response['num'].blank? && response['from'].blank?
           node = Node.where(number: response['num'].presence || response['from']).first_or_initialize
-          next if node.ignore? || node.short_name == $tx_bot.name
+          ignore << node.number if node.ignore? || node.short_name == $tx_bot.name
           node.updated_at = Time.now
           node.save
           rx_name = [node.short_name, node.long_name].select(&:present?).join(' - ').presence || 'UNKNOWN'
           case response['portnum']
             when 'TEXT_MESSAGE_APP'
+              if ignore.include?(node.number)
+                log "#{node.number} IS CURRENTLY IGNORED!", :red
+                next
+              end
+              log "IGNORING #{node.number} FOR 10 SECONDS...", :red
+              ignore << node.number
+              Thread.new {
+                sleep 10
+                ignore -= [node.number]
+                log "#{node.number} NO LONGER IGNORED!", :red
+              }
               log "[#{rx_name}]: #{response}", :blue
               ch_index = channel = response['channel'] rescue nil
               payload = response['payload'] rescue nil

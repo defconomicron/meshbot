@@ -8,11 +8,12 @@ class Ignore
   def set
     msgs = []
     return 'A keyword must be provided with your request.  Example: @ignore bob' if @str.blank?
-    nodes = Node.where('long_name like ? or short_name like ?', "%#{@str}%", "%#{@str}%")
+    nodes = Node.where('long_name like ? or short_name like ? or number like ?', "%#{@str}%", "%#{@str}%", "%#{@str}%")
     return "No nodes with keyword \"#{@str}\"" if nodes.empty?
     nodes.each do |node|
       node.ignored_at = Time.now
-      msgs << "#{node.short_name}: #{node.long_name} has been ignored." if node.save
+      name = [node.short_name, node.long_name].select(&:present?).join(': ').presence || "Node ##{node.number}"
+      msgs << "#{name} has been ignored." if node.save
     end
     msgs.join(' ')
   end
