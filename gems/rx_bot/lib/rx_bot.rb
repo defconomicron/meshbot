@@ -23,14 +23,13 @@ class RxBot
           next if !response.is_a?(Hash)
           next if response['num'].blank? && response['from'].blank?
           node = Node.where(number: response['num'].presence || response['from']).first_or_initialize
-          ignore << node.number if node.ignore? || node.short_name == $tx_bot.name || deaf
           node.updated_at = Time.now
           node.save
           rx_name = [node.short_name, node.long_name].select(&:present?).join(' - ').presence || 'UNKNOWN'
           case response['portnum']
             when 'TEXT_MESSAGE_APP'
               log "[#{rx_name}]: #{response}", :blue
-              if ignore.include?(node.number)
+              if ignore.include?(node.number) || node.ignore? || node.short_name == $tx_bot.name || deaf
                 log "#{node.number} IS CURRENTLY IGNORED!", :red
                 next
               end
