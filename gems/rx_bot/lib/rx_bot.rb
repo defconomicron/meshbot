@@ -29,6 +29,7 @@ class RxBot
           rx_name = [node.short_name, node.long_name].select(&:present?).join(' - ').presence || 'UNKNOWN'
           case response['portnum']
             when 'TEXT_MESSAGE_APP'
+              log "[#{rx_name}]: #{response}", :blue
               if ignore.include?(node.number)
                 log "#{node.number} IS CURRENTLY IGNORED!", :red
                 next
@@ -40,7 +41,6 @@ class RxBot
                 ignore -= [node.number]
                 log "#{node.number} NO LONGER IGNORED!", :red
               }
-              log "[#{rx_name}]: #{response}", :blue
               ch_index = channel = response['channel'] rescue nil
               payload = response['payload'] rescue nil
               ch_index ||= 0
