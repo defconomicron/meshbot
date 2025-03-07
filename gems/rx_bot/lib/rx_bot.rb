@@ -11,35 +11,19 @@ class RxBot
   def monitor
     $rx_bot.log 'IGNORING RESPONSES FOR 30 SECONDS...', :yellow
     deaf = true
-    Thread.new {
-      sleep 30
-      deaf = false
-      $rx_bot.log 'NO LONGER IGNORING RESPONSES!', :yellow
-    }
+    Thread.new {sleep 30;deaf = false;$rx_bot.log 'NO LONGER IGNORING RESPONSES!', :yellow}
     Thread.new {
       begin
         ignore = []
         MeshtasticCli.new(host: @host, name: @name).responses do |response|
-          next if !response.is_a?(Hash)
-          next if response['num'].blank? && response['from'].blank?
-          node = Node.where(number: response['num'].presence || response['from']).first_or_initialize
+          number = response['num'].presence || response['from']
+          next if number.blank?
+          node = Node.where(number: number).first_or_initialize
           node.updated_at = Time.now
           node.save
-          rx_name = [node.short_name, node.long_name].select(&:present?).join(' - ').presence || 'UNKNOWN'
           case response['portnum']
             when 'TEXT_MESSAGE_APP'
-              log "[#{rx_name}]: #{response}", :blue
-              if ignore.include?(node.number) || node.ignore? || node.short_name == $tx_bot.name || deaf
-                log "#{node.number} IS CURRENTLY IGNORED!", :red
-                next
-              end
-              log "IGNORING #{node.number} FOR 10 SECONDS...", :red
-              ignore << node.number
-              Thread.new {
-                sleep 10
-                ignore -= [node.number]
-                log "#{node.number} NO LONGER IGNORED!", :red
-              }
+              log "[#{node.name}]: #{response}", :blue
               ch_index = channel = response['channel'] rescue nil
               payload = response['payload'] rescue nil
               ch_index ||= 0
@@ -47,25 +31,34 @@ class RxBot
               Message.create(ch_index: ch_index, node_id: node.id, message: payload)
               params_arr = [payload.split(' ')[1..-1]].compact.flatten
               params_str = params_arr.join(' ')
+              if ignore.include?(node.number) || node.ignore? || node.short_name == $tx_bot.name || deaf
+                log "#{node.number} IS CURRENTLY IGNORED!", :red
+                next
+              end
               $TEXT_MESSAGE_HANDLERS.each {|handler|
-                [handler.call(payload: payload, params_arr: params_arr, params_str: params_str, ch_index: ch_index, node: node)].flatten.compact.each do |text|
-                  $tx_bot.send_text(text, ch_index) if text.present?
+                texts = [handler.call(payload: payload, params_arr: params_arr, params_str: params_str, ch_index: ch_index, node: node)].flatten.compact.select(&:present?)
+                texts.each {|text| $tx_bot.send_text(text, ch_index)}
+                if texts.present?
+                  log "IGNORING #{node.number} FOR 10 SECONDS...", :red
+                  ignore << node.number
+                  Thread.new {sleep 10;ignore -= [node.number];log "#{node.number} NO LONGER IGNORED!", :red}
+                  break
                 end
               }
             when 'POSITION_APP'
-              log "[#{rx_name}]: #{response}", :blue
+              log "[#{node.name}]: #{response}", :blue
               node.position_snapshot = response.to_json
               node.save
             when 'TELEMETRY_APP'
-              log "[#{rx_name}]: #{response}", :blue
+              log "[#{node.name}]: #{response}", :blue
               node.telemetry_snapshot = response.to_json
               node.save
             when 'NODEINFO_APP'
-              log "[#{rx_name}]: #{response}", :blue
+              log "[#{node.name}]: #{response}", :blue
               node.nodeinfo_snapshot = response.to_json
               node.save
             else
-              log "[#{rx_name}]: #{response}", :black
+              log "[#{node.name}]: #{response}", :black
           end
         end
       rescue Exception => e

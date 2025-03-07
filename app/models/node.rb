@@ -30,4 +30,8 @@ class Node < ActiveRecord::Base
   def longitude
     JSON.parse(position_snapshot)['longitude'] rescue nil
   end
+
+  def name
+    [short_name, long_name].select(&:present?).join(' - ').presence || 'UNKNOWN'
+  end
 end
