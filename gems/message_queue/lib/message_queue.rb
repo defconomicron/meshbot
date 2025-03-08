@@ -18,8 +18,7 @@ class MessageQueue
           sleep 1
           next
         end
-        kill_keep_alive_routine
-        log "TX CH-#{message[:ch_index]} SENDING: #{message[:text]}", :green
+        # kill_keep_alive_routine
         tries = 5
         ch_index = message[:ch_index]
         begin
@@ -28,6 +27,8 @@ class MessageQueue
             truncate(228). # NOTE: Max string size is 231 characters
             gsub(/\"/, "'")
           text = Censor.new(text).apply
+          log "TX CH-#{ch_index} SENDING: #{text}", :green
+          kill_keep_alive_routine
           f = IO.popen("#{$meshtastic_path} --host #{$tx_bot.host} --ch-index #{ch_index} --no-time --ack --sendtext \"#{text}\"")
           response = f.readlines.join("\n")
           f.close
