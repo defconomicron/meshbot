@@ -84,12 +84,12 @@ class RxBot
     def temporarily_ignore_node_number(number)
       log "IGNORING #{number} FOR 10 SECONDS...", :red
       @ignored_node_numbers << number
-      Thread.new {sleep 10;@ignored_node_numbers -= [number];log "#{number} NO LONGER IGNORED!", :red}
+      Thread.new {sleep 10;@ignored_node_numbers -= [number];log("#{number} NO LONGER IGNORED!", :red)}
     end
 
     def temporarily_ignore_responses
       log 'IGNORING RESPONSES FOR 30 SECONDS...', :yellow
       @deaf = true
-      Thread.new {sleep 30;@deaf = false;log 'NO LONGER IGNORING RESPONSES!', :yellow}
+      Thread.new {sleep 30;@deaf = false;log('NO LONGER IGNORING RESPONSES!', :yellow)}
     end
 end
