@@ -1,21 +1,20 @@
 class RxBot
-  attr_accessor :name, :host
+  attr_accessor :name, :host, :deaf, :ignored_node_numbers
 
   def initialize(options={})
     @name = options[:name]
     log 'INITIALIZING...', :green
     @host = options[:host]
+    @deaf = true
+    @ignored_node_numbers = []
     log 'DONE!', :green
   end
 
   def monitor
-    $rx_bot.log 'IGNORING RESPONSES FOR 30 SECONDS...', :yellow
-    deaf = true
-    Thread.new {sleep 30;deaf = false;$rx_bot.log 'NO LONGER IGNORING RESPONSES!', :yellow}
+    temporarily_ignore_responses
     Thread.new {
       begin
-        ignore = []
-        MeshtasticCli.new(host: @host, name: @name).responses do |response|
+        responses do |response|
           number = response['num'].presence || response['from']
           next if number.blank?
           node = Node.where(number: number).first_or_initialize
@@ -31,7 +30,7 @@ class RxBot
               Message.create(ch_index: ch_index, node_id: node.id, message: payload)
               params_arr = [payload.split(' ')[1..-1]].compact.flatten
               params_str = params_arr.join(' ')
-              if ignore.include?(node.number) || node.ignore? || node.short_name == $tx_bot.name || deaf
+              if node_ignored?(node)
                 log "#{node.number} IS CURRENTLY IGNORED!", :red
                 next
               end
@@ -39,9 +38,7 @@ class RxBot
                 texts = [handler.call(payload: payload, params_arr: params_arr, params_str: params_str, ch_index: ch_index, node: node)].flatten.compact.select(&:present?)
                 texts.each {|text| $tx_bot.send_text(text, ch_index)}
                 if texts.present?
-                  log "IGNORING #{node.number} FOR 10 SECONDS...", :red
-                  ignore << node.number
-                  Thread.new {sleep 10;ignore -= [node.number];log "#{node.number} NO LONGER IGNORED!", :red}
+                  temporarily_ignore_node_number(node.number)
                   break
                 end
               }
@@ -75,4 +72,26 @@ class RxBot
   def log(text, color = nil)
     $log_it.log "[#{@name}] #{text}", color
   end
+
+  private
+
+    def responses
+      MeshtasticCli.new(host: @host, name: @name).responses {|response| yield response}
+    end
+
+    def node_ignored?(node)
+      @ignored_node_numbers.include?(node.number) || node.ignore? || node.short_name == $tx_bot.name || @deaf
+    end
+
+    def temporarily_ignore_node_number(number)
+      log "IGNORING #{number} FOR 10 SECONDS...", :red
+      @ignored_node_numbers << number
+      Thread.new {sleep 10;@ignored_node_numbers -= [number];log "#{number} NO LONGER IGNORED!", :red}
+    end
+
+    def temporarily_ignore_responses
+      log 'IGNORING RESPONSES FOR 30 SECONDS...', :yellow
+      @deaf = true
+      Thread.new {sleep 30;@deaf = false;log 'NO LONGER IGNORING RESPONSES!', :yellow}
+    end
 end
