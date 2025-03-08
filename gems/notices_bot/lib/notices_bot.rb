@@ -13,9 +13,7 @@ class NoticesBot
         end
         variable.value = Time.now
         next if !variable.save
-        Notice.order(:order).each do |notice|
-          $tx_bot.send_text(notice.message, notice.ch_index)
-        end
+        Notice.order(:order).each {|notice| $tx_bot.send_text(notice.message, notice.ch_index)}
       end
     }
     self
