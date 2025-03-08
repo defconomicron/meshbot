@@ -7,19 +7,15 @@ class MeshtasticCli
   end
 
   def reboot
-    $rx_bot.log "REBOOTING #{@host}!", :red
+    log "REBOOTING #{@host}!", :red
     `#{$meshtastic_path} --host #{@host} --reboot`
-  end
-
-  def get_value(str, key)
-    str.scan(/['"]#{key}['"]: ['"]*(.*?)['"]*([,}]|$)/).flatten.first rescue nil
   end
 
   def responses(&block)
     PTY.spawn("#{$meshtastic_path} --host #{@host} --listen") do |stdout, stdin, pid|
       response = ''
       stdout.each do |line|
-        # $rx_bot.log "RAW: #{line.strip}"
+        # log "RAW: #{line.strip}"
         line = line.strip.force_encoding('UTF-8')
         raise Exception.new(line) if error?(line)
         if line =~ /DEBUG/ && response.present?
@@ -64,10 +60,26 @@ class MeshtasticCli
         response << line << "\n"
       end
     end
+  rescue Exception => e
+    log "EXCEPTION: #{e}: #{e.backtrace}", :red
+    log "Whew! I'm going to sleep... Be back in a second.", :yellow
+    sleep 1
+    log "Okay, I'm awake again and listening for new responses!", :yellow
+    retry
   end
 
-  def error?(str)
-    str =~ /BrokenPipeError/i ||
-    str =~ /Connection reset by peer/i
-  end
+  private
+
+    def get_value(str, key)
+      str.scan(/['"]#{key}['"]: ['"]*(.*?)['"]*([,}]|$)/).flatten.first rescue nil
+    end
+
+    def error?(str)
+      str =~ /BrokenPipeError/i ||
+      str =~ /Connection reset by peer/i
+    end
+
+    def log(text, color = nil)
+      $rx_bot.log "#{text}", color
+    end
 end

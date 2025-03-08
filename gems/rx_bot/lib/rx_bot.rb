@@ -13,8 +13,8 @@ class RxBot
   def monitor
     temporarily_ignore_responses
     Thread.new {
-      begin
-        responses do |response|
+      responses do |response|
+        begin
           number = response['num'].presence || response['from']
           next if number.blank?
           node = Node.where(number: number).first_or_initialize
@@ -23,11 +23,9 @@ class RxBot
           case response['portnum']
             when 'TEXT_MESSAGE_APP'
               log "[#{node.name}]: #{response}", :blue
-              ch_index = channel = response['channel'] rescue nil
-              payload = response['payload'] rescue nil
-              ch_index ||= 0
-              payload = "#{payload}".strip
-              Message.create(ch_index: ch_index, node_id: node.id, message: payload)
+              ch_index = channel = (response['channel'] rescue nil) || 0
+              payload = "#{(response['payload'] rescue nil)}".strip
+              Message.create(node_id: node.id, ch_index: ch_index, message: payload)
               params_arr = [payload.split(' ')[1..-1]].compact.flatten
               params_str = params_arr.join(' ')
               if node_ignored?(node)
@@ -57,13 +55,13 @@ class RxBot
             else
               log "[#{node.name}]: #{response}", :black
           end
+        rescue Exception => e
+          log "EXCEPTION: #{e}: #{e.backtrace}", :red
+          log "Whew! I'm going to sleep... Be back in a second.", :yellow
+          sleep 1
+          log "Okay, I'm awake again and listening for new responses!", :yellow
+          retry
         end
-      rescue Exception => e
-        log "EXCEPTION: #{e}: #{e.backtrace}", :red
-        log "Whew! I'm going to sleep... Be back in a minute.", :yellow
-        sleep 1
-        log "Okay, I'm awake again and listening for new responses!", :yellow
-        retry
       end
     }
     self
