@@ -1,40 +1,24 @@
 class MessageQueue
-  attr_accessor :messages
+  attr_accessor :messages, :keep_alive_pid
 
   def initialize
     log 'MESSAGE QUEUE INITIALIZING...', :yellow
     @messages = []
+    @keep_alive_pid = nil
   end
 
   def start
+    ensure_tx_bot_defined
     Thread.new {
       log 'MESSAGE QUEUE RUNNING!', :yellow
-      $keep_alive_pid = nil
-      if $tx_bot.nil?
-        log 'ERROR: $tx_bot must be defined before MessageQueue can start.', :red
-        exit
-      end
       while true
-        if $keep_alive_pid.nil? && @messages.empty?
-          log 'KEEP-ALIVE ROUTINE INITIALIZING...', :yellow
-          Thread.new {
-            PTY.spawn("#{$meshtastic_path} --host #{$tx_bot.host} --listen") do |stdout, stdin, pid|
-              $keep_alive_pid = pid
-              stdout.each {|line|} rescue nil
-            end
-          }
-          log 'KEEP-ALIVE ROUTINE RUNNING!', :yellow
-        end
+        initialize_keep_alive_routine
         message = @messages.shift
         if message.nil?
           sleep 1
           next
         end
-        if $keep_alive_pid.present?
-          `kill -9 #{$keep_alive_pid}`
-          $keep_alive_pid = nil
-          log 'KEEP-ALIVE ROUTINE KILLED!', :yellow
-        end
+        kill_keep_alive_routine
         log "TX CH-#{message[:ch_index]} SENDING: #{message[:text]}", :green
         tries = 5
         ch_index = message[:ch_index]
@@ -67,7 +51,37 @@ class MessageQueue
     self
   end
 
+  private
+
   def log(text, color=nil)
-    ($tx_bot || $log_it).log(text, color)
-  end
+      ($tx_bot || $log_it).log(text, color)
+    end
+
+    def initialize_keep_alive_routine
+      if @keep_alive_pid.nil? && @messages.empty?
+        log 'KEEP-ALIVE ROUTINE INITIALIZING...', :yellow
+        Thread.new {
+          PTY.spawn("#{$meshtastic_path} --host #{$tx_bot.host} --listen") do |stdout, stdin, pid|
+            @keep_alive_pid = pid
+            stdout.each {|line|} rescue nil
+          end
+        }
+        log 'KEEP-ALIVE ROUTINE RUNNING!', :yellow
+      end
+    end
+
+    def kill_keep_alive_routine
+      if @keep_alive_pid.present?
+        `kill -9 #{@keep_alive_pid}`
+        @keep_alive_pid = nil
+        log 'KEEP-ALIVE ROUTINE KILLED!', :yellow
+      end
+    end
+
+    def ensure_tx_bot_defined
+      if $tx_bot.nil?
+        log 'ERROR: $tx_bot must be defined before MessageQueue can start.', :red
+        exit
+      end
+    end
 end
