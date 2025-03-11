@@ -81,12 +81,12 @@ class MessageQueue
       if @keep_alive_pid.nil? && @messages.empty?
         log 'KEEP-ALIVE ROUTINE INITIALIZING...', :yellow
         Thread.new {
+          log 'KEEP-ALIVE ROUTINE RUNNING!', :yellow
           PTY.spawn("#{$meshtastic_path} --host #{$tx_bot.host} --listen") do |stdout, stdin, pid|
             @keep_alive_pid = pid
             stdout.each {|line|} rescue nil
           end
         }
-        log 'KEEP-ALIVE ROUTINE RUNNING!', :yellow
       end
     end
 
