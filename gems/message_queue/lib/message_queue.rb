@@ -5,6 +5,7 @@ class MessageQueue
     log 'MESSAGE QUEUE INITIALIZING...', :yellow
     @messages = []
     @keep_alive_pid = nil
+    log 'MESSAGE QUEUE INITIALIZED!', :yellow
   end
 
   def start
@@ -13,29 +14,20 @@ class MessageQueue
       log 'MESSAGE QUEUE RUNNING!', :yellow
       while true
         initialize_keep_alive_routine
-        message = @messages.shift
-        if message.nil?
-          sleep 1
-          next
-        end
-        # kill_keep_alive_routine
+        message = get_message
         tries = 5
         ch_index = message[:ch_index]
         begin
-          text = message[:text].split("\n").
-            join(' ').
-            truncate(228). # NOTE: Max string size is 231 characters
-            gsub(/\"/, "'")
-          text = Censor.new(text).apply
+          text = filter_text(message[:text])
           log "TX CH-#{ch_index} SENDING: #{text}", :green
           kill_keep_alive_routine
-          f = IO.popen("#{$meshtastic_path} --host #{$tx_bot.host} --ch-index #{ch_index} --no-time --ack --sendtext \"#{text}\"")
-          response = f.readlines.join("\n")
-          f.close
-          log "MESH_CLI: #{response}"
-          tries = 0 if response =~ /data payload too big/i
-          sent = response =~ /received an implicit ack/i
-          raise Exception.new(response) if !sent
+          send_message(ch_index, text) {|f|
+            response = f.readlines.join("\n")
+            log "MESH_CLI: #{response}"
+            tries = 0 if response =~ /data payload too big/i
+            sent = response =~ /received an implicit ack/i
+            raise Exception.new(response) if !sent
+          }
           log "TX CH-#{ch_index} SENT!", :green
         rescue Exception => e
           log "TX CH-#{ch_index} EXCEPTION: #{e}: #{e.backtrace}", :red
@@ -54,7 +46,34 @@ class MessageQueue
 
   private
 
-  def log(text, color=nil)
+    def filter_text(text)
+      censor_text(normalize_text(text))
+    end
+
+    def normalize_text(text)
+      text.split("\n").
+        join(' ').
+        truncate(228). # NOTE: Max string size is 231 characters
+        gsub(/\"/, "'")
+    end
+
+    def censor_text(text)
+      Censor.new(text).apply
+    end
+
+    def send_message(ch_index, text)
+      IO.popen("#{$meshtastic_path} --host #{$tx_bot.host} --ch-index #{ch_index} --no-time --ack --sendtext \"#{text}\"")
+    end
+
+    def get_message
+      while (message = @messages.shift).nil?
+        sleep 1
+        next
+      end
+      message
+    end
+
+    def log(text, color=nil)
       ($tx_bot || $log_it).log(text, color)
     end
 
