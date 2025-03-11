@@ -5,17 +5,18 @@ class MessageQueue
     log 'MESSAGE QUEUE INITIALIZING...', :yellow
     @messages = []
     @keep_alive_pid = nil
+    @sending_tries = $settings['sending_tries']
+    ensure_tx_bot_defined
     log 'MESSAGE QUEUE INITIALIZED!', :yellow
   end
 
   def start
-    ensure_tx_bot_defined
     Thread.new {
       log 'MESSAGE QUEUE RUNNING!', :yellow
       while true
         initialize_keep_alive_routine
         message = get_next_message
-        tries = 5
+        tries = @sending_tries
         ch_index = message[:ch_index]
         begin
           text = filter_text(message[:text])
@@ -24,9 +25,8 @@ class MessageQueue
           send_message(ch_index, text) {|f|
             response = f.readlines.join("\n")
             log "MESH_CLI: #{response}"
-            tries = 0 if response =~ /data payload too big/i
-            sent = !(response =~ /received an implicit ack/i).nil?
-            raise Exception.new(response) if !sent
+            tries = 0 if fatal_error?(response)
+            raise Exception.new(response) if !sent_successfully?(response)
           }
           log "TX CH-#{ch_index} SENT!", :green
         rescue Exception => e
@@ -45,6 +45,14 @@ class MessageQueue
   end
 
   private
+
+    def fatal_error?(response)
+      !(response =~ /data payload too big/i).nil?
+    end
+
+    def sent_successfully?(response)
+      !(response =~ /received an implicit ack/i).nil?
+    end
 
     def filter_text(text)
       censor_text(normalize_text(text))
