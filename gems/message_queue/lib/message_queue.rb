@@ -14,7 +14,7 @@ class MessageQueue
       log 'MESSAGE QUEUE RUNNING!', :yellow
       while true
         initialize_keep_alive_routine
-        message = get_message
+        message = get_next_message
         tries = 5
         ch_index = message[:ch_index]
         begin
@@ -65,7 +65,7 @@ class MessageQueue
       IO.popen("#{$meshtastic_path} --host #{$tx_bot.host} --ch-index #{ch_index} --no-time --ack --sendtext \"#{text}\"")
     end
 
-    def get_message
+    def get_next_message
       while (message = @messages.shift).nil?
         sleep 1
         next
