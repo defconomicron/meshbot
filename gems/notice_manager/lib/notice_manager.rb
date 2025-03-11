@@ -24,9 +24,7 @@ class NoticeManager
   def all # @notice all
     notices = Notice.where(ch_index: @ch_index).order('number asc')
     return 'No notices currently set!' if notices.empty?
-    notices.each do |notice|
-      $tx_bot.send_text notice.message, @ch_index
-    end
+    notices.each {|notice| $tx_bot.send_text(notice.message, @ch_index)}
     nil
   end
 
