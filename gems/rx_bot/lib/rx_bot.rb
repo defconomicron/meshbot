@@ -33,7 +33,14 @@ class RxBot
                 next
               end
               $TEXT_MESSAGE_HANDLERS.each {|handler|
-                texts = [handler.call(payload: payload, params_arr: params_arr, params_str: params_str, ch_index: ch_index, node: node)].flatten.compact.select(&:present?)
+                options = {
+                  node:       node,
+                  ch_index:   ch_index,
+                  payload:    payload,
+                  params_arr: params_arr,
+                  params_str: params_str
+                }
+                texts = [handler.call(options)].flatten.compact.select(&:present?)
                 texts.each {|text| $tx_bot.send_text(text, ch_index)}
                 if texts.present?
                   temporarily_ignore_node_number(node.number)
