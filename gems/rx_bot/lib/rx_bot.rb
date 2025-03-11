@@ -10,6 +10,22 @@ class RxBot
     log 'DONE!', :green
   end
 
+  def payload_to_params_arr(payload)
+    [payload.split(' ')[1..-1]].compact.flatten
+  end
+
+  def params_arr_to_params_str(params_arr)
+    params_arr.join(' ')
+  end
+
+  def extract_payload(response)
+    "#{(response['payload'] rescue nil)}".strip
+  end
+
+  def extract_ch_index(response)
+    (response['channel'] rescue nil) || 0
+  end
+
   def monitor
     temporarily_ignore_responses
     Thread.new {
@@ -23,11 +39,11 @@ class RxBot
           case response['portnum']
             when 'TEXT_MESSAGE_APP'
               log "[#{node.name}]: #{response}", :blue
-              ch_index = channel = (response['channel'] rescue nil) || 0
-              payload = "#{(response['payload'] rescue nil)}".strip
+              ch_index = extract_ch_index(response)
+              payload = extract_payload(response)
               Message.create(node_id: node.id, ch_index: ch_index, message: payload)
-              params_arr = [payload.split(' ')[1..-1]].compact.flatten
-              params_str = params_arr.join(' ')
+              params_arr = payload_to_params_arr(payload)
+              params_str = params_arr_to_params_str(params_arr)
               if node_ignored?(node)
                 log "#{node.number} IS CURRENTLY IGNORED!", :red
                 next
