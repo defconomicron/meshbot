@@ -10,22 +10,6 @@ class RxBot
     log 'DONE!', :green
   end
 
-  def payload_to_params_arr(payload)
-    [payload.split(' ')[1..-1]].compact.flatten
-  end
-
-  def params_arr_to_params_str(params_arr)
-    params_arr.join(' ')
-  end
-
-  def extract_payload(response)
-    "#{(response['payload'] rescue nil)}".strip
-  end
-
-  def extract_ch_index(response)
-    (response['channel'] rescue nil) || 0
-  end
-
   def monitor
     temporarily_ignore_responses
     Thread.new {
@@ -88,6 +72,22 @@ class RxBot
   end
 
   private
+
+    def payload_to_params_arr(payload)
+      [payload.split(' ')[1..-1]].compact.flatten
+    end
+
+    def params_arr_to_params_str(params_arr)
+      params_arr.join(' ')
+    end
+
+    def extract_payload(response)
+      "#{(response['payload'] rescue nil)}".strip
+    end
+
+    def extract_ch_index(response)
+      (response['channel'] rescue nil) || 0
+    end
 
     def responses
       MeshtasticCli.new(host: @host, name: @name).responses {|response| yield response}
