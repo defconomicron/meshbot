@@ -45,10 +45,6 @@ class Whois
     str << "air_util_tx = #{air_util_tx}" if air_util_tx.present?
     str << "lati = #{latitude}" if latitude.present?
     str << "long = #{longitude}" if longitude.present?
-    slices = []
-    str.each_slice(8).each do |_slice|
-      slices << _slice.join(' | ').strip
-    end
-    slices
+    str.each_slice(8).map {|slice| slice.join(' | ').strip}
   end
 end
