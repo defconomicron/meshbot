@@ -8,6 +8,6 @@ class Seen
   def msg
     return 'A keyword must be provided with your request.  Example: @seen bob' if @str.blank?
     node = Node.where('long_name like ? or short_name like ?', "%#{@str}%", "%#{@str}%").last
-    node.present? ? "#{node.short_name}: #{node.long_name} was last seen on #{node.updated_at.human}" : "Sorry!! I haven't seen #{@str}."
+    node.present? ? "#{node.name} was last seen on #{node.updated_at.human}" : "Sorry!! I haven't seen #{@str}."
   end
 end
