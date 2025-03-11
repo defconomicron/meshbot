@@ -15,8 +15,7 @@ class MeshtasticCli
     PTY.spawn("#{$meshtastic_path} --host #{@host} --listen") do |stdout, stdin, pid|
       response = ''
       stdout.each do |line|
-        # log "RAW: #{line.strip}"
-        line = line.strip.force_encoding('UTF-8')
+        line = filter_text(line)
         raise Exception.new(line) if error?(line)
         if line =~ /DEBUG/ && response.present?
           _response = {
@@ -69,6 +68,10 @@ class MeshtasticCli
   end
 
   private
+
+    def filter_text(text)
+      text.strip.force_encoding('UTF-8')
+    end
 
     def get_value(str, key)
       str.scan(/['"]#{key}['"]: ['"]*(.*?)['"]*([,}]|$)/).flatten.first rescue nil
