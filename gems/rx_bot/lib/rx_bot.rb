@@ -11,8 +11,8 @@ class RxBot
   end
 
   def monitor
-    temporarily_ignore_text_messages
     Thread.new {
+      temporarily_ignore_text_messages
       responses do |response|
         begin
           number = response['num'].presence || response['from']
