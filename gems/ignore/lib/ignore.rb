@@ -12,8 +12,7 @@ class Ignore
     return "No nodes with keyword \"#{@str}\"" if nodes.empty?
     nodes.each do |node|
       node.ignored_at = Time.now
-      name = [node.short_name, node.long_name].select(&:present?).join(': ').presence || "Node ##{node.number}"
-      msgs << "#{name} has been ignored." if node.save
+      msgs << "#{node.name} has been ignored." if node.save
     end
     msgs.join(' ')
   end

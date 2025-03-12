@@ -32,6 +32,6 @@ class Node < ActiveRecord::Base
   end
 
   def name
-    [short_name, long_name].select(&:present?).join(' - ').presence || 'UNKNOWN'
+    [short_name, long_name].select(&:present?).join(': ').presence || number.presence || 'UNKNOWN'
   end
 end

@@ -29,7 +29,7 @@ class RxBot
               params_arr = payload_to_params_arr(payload)
               params_str = params_arr_to_params_str(params_arr)
               if node_ignored?(node)
-                log "#{node.number} IS CURRENTLY IGNORED!", :red
+                log "#{node.name} IS CURRENTLY IGNORED!", :red
                 next
               end
               options = {

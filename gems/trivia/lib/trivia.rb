@@ -147,7 +147,7 @@ class Trivia
       $tx_bot.send_text("Hmm... It looks like no one scored this round. Lol.  Better luck next time!", @ch_index) if trivia_profiles.empty?
       trivia_profiles.each_with_index do |trivia_profile, i|
         node = trivia_profile.node
-        name = [node.short_name, node.long_name].select(&:present?).join(': ').presence || "Node ##{node.number}"
+        name = node.name
         case i
           when 0 then $tx_bot.send_text("[1st Place]: #{name} with #{trivia_profile.points} points", @ch_index)
           when 1 then $tx_bot.send_text("[2nd Place]: #{name} with #{trivia_profile.points} points", @ch_index)
