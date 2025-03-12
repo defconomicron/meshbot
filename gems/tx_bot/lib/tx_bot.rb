@@ -8,6 +8,7 @@ class TxBot
     @messages = []
     @keep_alive_pid = nil
     @sending_tries = $settings['sending_tries']
+    @max_text_length = $max_text_length
     log 'DONE!', :green
   end
 
@@ -69,7 +70,7 @@ class TxBot
     end
 
     def normalize_text(text)
-      text.split("\n").join(' ').truncate($max_text_length).gsub(/\"/, "'")
+      text.split("\n").join(' ').truncate(@max_text_length).gsub(/\"/, "'")
     end
 
     def censor_text(text)
