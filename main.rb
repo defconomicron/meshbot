@@ -26,14 +26,14 @@ begin
 
   $sending_tries = $settings['bot']['tx']['sending_tries'] rescue nil
   raise Exception.new('bot > tx > sending_tries not defined in settings.yml') if $sending_tries.blank?
+
+  $rx_bot.monitor
+  $tx_bot.monitor
+
+  # Process.daemon(true, false)
+  # NoticesBot.new.monitor
+
+  while true;sleep 1;end;
 rescue Exception => e
   $log_it.log("ERROR: #{e}", :red)
 end
-
-$rx_bot.monitor
-$tx_bot.monitor
-
-# Process.daemon(true, false)
-# NoticesBot.new.monitor
-
-while true;sleep 1;end;

@@ -20,7 +20,7 @@ class MeshtasticCli
           response << line << "\n"
           next
         end
-        yield {
+        yield({
           id:                  get_value(response, 'id'),
           from:                get_value(response, 'from'),
           to:                  get_value(response, 'to'),
@@ -54,7 +54,7 @@ class MeshtasticCli
           air_util_tx:         get_value(response, 'air_util_tx').presence || get_value(response, 'airUtilTx'),
           uptime_seconds:      get_value(response, 'uptime_seconds').presence || get_value(response, 'uptimeSeconds'),
           payload:             get_value(response, 'payload').try(:gsub, /^b'/,'')
-        }.select {|k,v| v.present?}.with_indifferent_access
+        }.select {|k,v| v.present?}.with_indifferent_access)
         response = ''
       end
     end
