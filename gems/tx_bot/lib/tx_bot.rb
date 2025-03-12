@@ -7,7 +7,6 @@ class TxBot
     @host = options[:host]
     @messages = []
     @keep_alive_pid = nil
-    @sending_tries = $settings['sending_tries']
     log 'DONE!', :green
   end
 
@@ -17,7 +16,7 @@ class TxBot
       while true
         initialize_keep_alive_routine
         message = get_next_message
-        tries = @sending_tries
+        tries = $sending_tries
         ch_index = message[:ch_index]
         begin
           text = filter_text(message[:text])
