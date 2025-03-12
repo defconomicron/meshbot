@@ -13,7 +13,7 @@ class TxBot
 
   def monitor
     Thread.new {
-      log 'MESSAGE QUEUE RUNNING!', :yellow
+      log 'READY TO SEND MESSAGES!', :green
       while true
         initialize_keep_alive_routine
         message = get_next_message
@@ -109,13 +109,6 @@ class TxBot
         `kill -9 #{@keep_alive_pid}`
         @keep_alive_pid = nil
         log 'KEEP-ALIVE ROUTINE KILLED!', :yellow
-      end
-    end
-
-    def ensure_tx_bot_defined
-      if $tx_bot.nil?
-        log 'ERROR: $tx_bot must be defined before MessageQueue can start.', :red
-        exit
       end
     end
 end
