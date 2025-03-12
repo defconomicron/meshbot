@@ -1,19 +1,39 @@
-require 'yaml'
-$settings = YAML.load_file('settings.yml') rescue {}
-$meshtastic_path = $settings['meshtastic']['path'] rescue nil
-$max_text_length = $settings['max_text_length'] rescue nil
-$sending_tries = $settings['sending_tries'] rescue nil
 require './config/environment.rb'
 $log_it = LogIt.new
-$log_it.log('ERROR: settings.yml not defined', :red) if $settings.blank?
-$log_it.log('ERROR: meshtastic path not defined in settings.yml', :red) if $meshtastic_path.blank?
-$log_it.log('ERROR: max_text_length not defined in settings.yml', :red) if $max_text_length.blank?
-$log_it.log('ERROR: sending_tries not defined in settings.yml', :red) if $sending_tries.blank?
-# Process.daemon(true, false)
-$log_it.log('ERROR: bot not defined in settings.yml', :red) if $settings['bot'].blank?
-$rx_bot = RxBot.new(name: $settings['bot']['rx']['name'], host: $settings['bot']['rx']['host'])
-$tx_bot = TxBot.new(name: $settings['bot']['tx']['name'], host: $settings['bot']['tx']['host'])
+
+begin
+  require 'yaml'
+  $settings = YAML.load_file('settings.yml') rescue {}
+  raise Exception.new('settings.yml not defined') if $settings.blank?
+
+  $meshtastic_path = $settings['meshtastic']['path'] rescue nil
+  raise Exception.new('meshtastic > path not defined in settings.yml') if $meshtastic_path.blank?
+
+  raise Exception.new('bot not defined in settings.yml') if $settings['bot'].blank?
+
+  raise Exception.new('bot > rx not defined in settings.yml') if ($settings['bot']['rx'] rescue nil).blank?
+  raise Exception.new('bot > rx > name not defined in settings.yml') if ($settings['bot']['rx']['name'] rescue nil).blank?
+  raise Exception.new('bot > rx > host not defined in settings.yml') if ($settings['bot']['rx']['host'] rescue nil).blank?
+  $rx_bot = RxBot.new(name: $settings['bot']['rx']['name'], host: $settings['bot']['rx']['host'])
+
+  raise Exception.new('bot > tx not defined in settings.yml') if ($settings['bot']['tx'] rescue nil).blank?
+  raise Exception.new('bot > tx > name not defined in settings.yml') if ($settings['bot']['tx']['name'] rescue nil).blank?
+  raise Exception.new('bot > tx > host not defined in settings.yml') if ($settings['bot']['tx']['host'] rescue nil).blank?
+  $tx_bot = TxBot.new(name: $settings['bot']['tx']['name'], host: $settings['bot']['tx']['host'])
+
+  $max_text_length = $settings['bot']['tx']['max_text_length'] rescue nil
+  raise Exception.new('bot > tx > max_text_length not defined in settings.yml') if $max_text_length.blank?
+
+  $sending_tries = $settings['bot']['tx']['sending_tries'] rescue nil
+  raise Exception.new('bot > tx > sending_tries not defined in settings.yml') if $sending_tries.blank?
+rescue Exception => e
+  $log_it.log("ERROR: #{e}", :red)
+end
+
 $rx_bot.monitor
 $tx_bot.monitor
+
+# Process.daemon(true, false)
 # NoticesBot.new.monitor
+
 while true;sleep 1;end;
