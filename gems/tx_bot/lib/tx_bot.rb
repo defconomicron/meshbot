@@ -69,10 +69,7 @@ class TxBot
     end
 
     def normalize_text(text)
-      text.split("\n").
-        join(' ').
-        truncate(228). # NOTE: Max string size is 231 characters
-        gsub(/\"/, "'")
+      text.split("\n").join(' ').truncate($max_text_length).gsub(/\"/, "'")
     end
 
     def censor_text(text)
