@@ -16,7 +16,6 @@ gem 'log_it', path: 'gems/log_it'
 gem 'string', path: 'gems/string'
 gem 'time_utilities', path: 'gems/time_utilities'
 gem 'meshtastic_cli', path: 'gems/meshtastic_cli'
-gem 'message_queue', path: 'gems/message_queue'
 
 gem 'help', path: 'gems/help'
 gem 'about', path: 'gems/about'
