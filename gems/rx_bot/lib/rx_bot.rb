@@ -11,7 +11,7 @@ class RxBot
   end
 
   def monitor
-    temporarily_ignore_responses
+    temporarily_ignore_text_messages
     Thread.new {
       responses do |response|
         begin
@@ -32,14 +32,14 @@ class RxBot
                 log "#{node.number} IS CURRENTLY IGNORED!", :red
                 next
               end
+              options = {
+                node:       node,
+                ch_index:   ch_index,
+                payload:    payload,
+                params_arr: params_arr,
+                params_str: params_str
+              }
               $TEXT_MESSAGE_HANDLERS.each {|handler|
-                options = {
-                  node:       node,
-                  ch_index:   ch_index,
-                  payload:    payload,
-                  params_arr: params_arr,
-                  params_str: params_str
-                }
                 texts = [handler.call(options)].flatten.compact.select(&:present?)
                 texts.each {|text| $tx_bot.send_text(text, ch_index)}
                 if texts.present?
@@ -110,9 +110,9 @@ class RxBot
       Thread.new {sleep 10;@ignored_node_numbers -= [number];log("#{number} NO LONGER IGNORED!", :red)}
     end
 
-    def temporarily_ignore_responses
-      log 'IGNORING RESPONSES FOR 30 SECONDS...', :yellow
+    def temporarily_ignore_text_messages
+      log 'IGNORING TEXT MESSAGES FOR 30 SECONDS...', :yellow
       @deaf = true
-      Thread.new {sleep 30;@deaf = false;log('NO LONGER IGNORING RESPONSES!', :yellow)}
+      Thread.new {sleep 30;@deaf = false;log('NO LONGER IGNORING TEXT MESSAGES!', :yellow)}
     end
 end
