@@ -3,16 +3,16 @@ class TxBot
 
   def initialize(options)
     @name = options[:name]
-    log 'INITIALIZING...', :green
+    log 'INITIALIZING...', :yellow
     @host = options[:host]
     @messages = []
     @keep_alive_pid = nil
-    log 'DONE!', :green
+    log 'DONE!', :yellow
   end
 
   def monitor
     Thread.new {
-      log 'READY TO SEND MESSAGES!', :green
+      log 'READY TO SEND MESSAGES!', :yellow
       while true
         initialize_keep_alive_routine
         message = get_next_message

@@ -3,11 +3,11 @@ class RxBot
 
   def initialize(options={})
     @name = options[:name]
-    log 'INITIALIZING...', :green
+    log 'INITIALIZING...', :yellow
     @host = options[:host]
     @deaf = true
     @ignored_node_numbers = []
-    log 'DONE!', :green
+    log 'DONE!', :yellow
   end
 
   def monitor
