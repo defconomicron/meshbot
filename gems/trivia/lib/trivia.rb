@@ -1,4 +1,4 @@
-($COMMAND_KEYWORDS ||=[]) << '@trivia'
+($COMMAND_KEYWORDS ||= []) << '@trivia'
 $TRIVIA = nil
 $QUESTION_NUMBER = 0
 $DEFAULT_MAX_QUESTIONS = 25

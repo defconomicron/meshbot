@@ -1,4 +1,4 @@
-($COMMAND_KEYWORDS ||=[]) << '@8ball'
+($COMMAND_KEYWORDS ||= []) << '@8ball'
 ($TEXT_MESSAGE_HANDLERS ||= []) << Proc.new {|args| EightBall.new(question: args[:params_str]).msg if /^@8ball/i =~ args[:payload]}
 class EightBall
   def initialize(options)

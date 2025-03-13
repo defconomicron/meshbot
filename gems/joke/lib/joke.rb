@@ -1,4 +1,4 @@
-($COMMAND_KEYWORDS ||=[]) << '@joke'
+($COMMAND_KEYWORDS ||= []) << '@joke'
 ($TEXT_MESSAGE_HANDLERS ||= []) << Proc.new {|args| Joke.new(args[:ch_index]).msg if /^@joke/i =~ args[:payload]}
 class Joke
   # SOURCE: https://www.fatherly.com/entertainment/funniest-poop-jokes-and-poop-puns-for-kids

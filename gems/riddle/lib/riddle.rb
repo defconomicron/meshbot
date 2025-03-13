@@ -1,4 +1,4 @@
-($COMMAND_KEYWORDS ||=[]) << '@riddle'
+($COMMAND_KEYWORDS ||= []) << '@riddle'
 ($TEXT_MESSAGE_HANDLERS ||= []) << Proc.new {|args| Riddle.new(args[:ch_index]).msg if /^@riddle/i =~ args[:payload]}
 class Riddle
   # CREDIT: https://parade.com/947956/parade/riddles/

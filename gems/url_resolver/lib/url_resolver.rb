@@ -1,4 +1,4 @@
-($COMMAND_KEYWORDS ||=[]) << '@resolve'
+($COMMAND_KEYWORDS ||= []) << '@resolve'
 ($TEXT_MESSAGE_HANDLERS ||= []) << Proc.new {|args| UrlResolver.new(args[:params_str]).resolve if /^@resolve/i =~ args[:payload]}
 require 'embiggen'
 class UrlResolver

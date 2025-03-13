@@ -1,4 +1,4 @@
-($COMMAND_KEYWORDS ||=[]) << '@about'
+($COMMAND_KEYWORDS ||= []) << '@about'
 ($TEXT_MESSAGE_HANDLERS ||= []) << Proc.new {|args| About.new.msg if /^@about/i =~ args[:payload]}
 class About
   def initialize

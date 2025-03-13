@@ -1,4 +1,4 @@
-($COMMAND_KEYWORDS ||=[]) << '@weather'
+($COMMAND_KEYWORDS ||= []) << '@weather'
 ($TEXT_MESSAGE_HANDLERS ||= []) << Proc.new {|args| Weather.new(node: args[:node]).msg if /^@weather$/i =~ args[:payload]}
 class Weather
   def initialize(options)

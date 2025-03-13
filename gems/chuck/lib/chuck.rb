@@ -1,4 +1,4 @@
-($COMMAND_KEYWORDS ||=[]) << '@chuck'
+($COMMAND_KEYWORDS ||= []) << '@chuck'
 ($TEXT_MESSAGE_HANDLERS ||= []) << Proc.new {|args| Chuck.new.msg if /^@chuck/i =~ args[:payload]}
 class Chuck
   def initialize

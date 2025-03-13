@@ -1,4 +1,4 @@
-($COMMAND_KEYWORDS ||=[]) << '@recall'
+($COMMAND_KEYWORDS ||= []) << '@recall'
 ($TEXT_MESSAGE_HANDLERS ||= []) << Proc.new {|args| Recall.new(requester_node: args[:node], keyword: args[:params_arr].join('%')).msg if /^@recall/i =~ args[:payload]}
 class Recall
   def initialize(options)

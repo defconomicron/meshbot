@@ -1,4 +1,4 @@
-($COMMAND_KEYWORDS ||=[]) << '@notice'
+($COMMAND_KEYWORDS ||= []) << '@notice'
 ($TEXT_MESSAGE_HANDLERS ||= []) << Proc.new {|args| NoticeManager.new(ch_index: args[:ch_index]).help if /^@notice/i =~ args[:payload] && args[:params_arr][0].blank?}
 ($TEXT_MESSAGE_HANDLERS ||= []) << Proc.new {|args| NoticeManager.new(ch_index: args[:ch_index]).info if /^@notice/i =~ args[:payload] && args[:params_arr][0] == 'info'}
 ($TEXT_MESSAGE_HANDLERS ||= []) << Proc.new {|args| NoticeManager.new(ch_index: args[:ch_index]).all if /^@notice/i =~ args[:payload] && args[:params_arr][0] == 'all'}

@@ -1,4 +1,4 @@
-($COMMAND_KEYWORDS ||=[]) << '@callsign'
+($COMMAND_KEYWORDS ||= []) << '@callsign'
 ($TEXT_MESSAGE_HANDLERS ||= []) << Proc.new {|args| Callsign.new(callsign: args[:params_str]).msg if /^@callsign/i =~ args[:payload]}
 class Callsign
   def initialize(options)

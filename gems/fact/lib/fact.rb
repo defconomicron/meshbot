@@ -1,4 +1,4 @@
-($COMMAND_KEYWORDS ||=[]) << '@fact'
+($COMMAND_KEYWORDS ||= []) << '@fact'
 ($TEXT_MESSAGE_HANDLERS ||= []) << Proc.new {|args| Fact.new.msg if /^@fact/i =~ args[:payload]}
 class Fact
   def initialize

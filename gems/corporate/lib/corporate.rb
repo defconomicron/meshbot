@@ -1,6 +1,6 @@
 # SOURCE: https://github.com/sameerkumar18/corporate-bs-generator-api
 
-($COMMAND_KEYWORDS ||=[]) << '@corporate'
+($COMMAND_KEYWORDS ||= []) << '@corporate'
 ($TEXT_MESSAGE_HANDLERS ||= []) << Proc.new {|args| Corporate.new.msg if /^@corporate/i =~ args[:payload]}
 class Corporate
   ADVERBS = ['appropriately', 'assertively', 'authoritatively', 'collaboratively', 'compellingly', 'competently', 'completely',

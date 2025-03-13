@@ -1,4 +1,4 @@
-($COMMAND_KEYWORDS ||=[]) << '@ai'
+($COMMAND_KEYWORDS ||= []) << '@ai'
 ($TEXT_MESSAGE_HANDLERS ||= []) << Proc.new {|args| GoogleAi.new(args[:params_str]).msg if /^@ai/i =~ args[:payload]}
 class GoogleAi
   def initialize(question)

@@ -1,4 +1,4 @@
-($COMMAND_KEYWORDS ||=[]) << '@whois'
+($COMMAND_KEYWORDS ||= []) << '@whois'
 ($TEXT_MESSAGE_HANDLERS ||= []) << Proc.new {|args| Whois.new(args[:params_str]).msg if /^@whois/i =~ args[:payload]}
 class Whois
   def initialize(str)

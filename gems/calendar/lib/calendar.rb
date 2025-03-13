@@ -1,4 +1,4 @@
-($COMMAND_KEYWORDS ||=[]) << '@date'
+($COMMAND_KEYWORDS ||= []) << '@date'
 ($TEXT_MESSAGE_HANDLERS ||= []) << Proc.new {|args| Calendar.new.msg if /^@date/i =~ args[:payload]}
 class Calendar
   def initialize

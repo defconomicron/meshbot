@@ -1,4 +1,4 @@
-($COMMAND_KEYWORDS ||=[]) << '@shutdown'
+($COMMAND_KEYWORDS ||= []) << '@shutdown'
 ($TEXT_MESSAGE_HANDLERS ||= []) << Proc.new {|args| Shutdown.new.msg if /^@shutdown/i =~ args[:payload]}
 class Shutdown
   def initialize

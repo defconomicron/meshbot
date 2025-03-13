@@ -1,4 +1,4 @@
-($COMMAND_KEYWORDS ||=[]) << '@seen'
+($COMMAND_KEYWORDS ||= []) << '@seen'
 ($TEXT_MESSAGE_HANDLERS ||= []) << Proc.new {|args| Seen.new(args[:params_str]).msg if /^@seen/i =~ args[:payload]}
 class Seen
   def initialize(str)

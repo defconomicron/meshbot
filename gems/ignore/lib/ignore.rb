@@ -1,4 +1,4 @@
-($COMMAND_KEYWORDS ||=[]) << '@ignore'
+($COMMAND_KEYWORDS ||= []) << '@ignore'
 ($TEXT_MESSAGE_HANDLERS ||= []) << Proc.new {|args| Ignore.new(args[:params_str]).set if /^@ignore/i =~ args[:payload]}
 class Ignore
   def initialize(str)

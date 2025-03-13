@@ -1,4 +1,4 @@
-($COMMAND_KEYWORDS ||=[]) << '@reboot'
+($COMMAND_KEYWORDS ||= []) << '@reboot'
 ($TEXT_MESSAGE_HANDLERS ||= []) << Proc.new {|args| Reboot.new.msg if /^@reboot/i =~ args[:payload]}
 class Reboot
   def initialize
