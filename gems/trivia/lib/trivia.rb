@@ -10,17 +10,7 @@ $TRIVIA = nil
   ch_index = args[:ch_index]
   params_str = args[:params_str]
   payload = args[:payload]
-  if /^@trivia/i =~ payload
-    if $TRIVIA.present?
-      $tx_bot.send_text('Trivia is already running!', @ch_index)
-      next nil
-    end
-    $TRIVIA = Trivia.new(ch_index: ch_index, max_questions: params_str).start
-  end
-  if $TRIVIA.nil? && (/^@score|@points$/i =~ payload || /^@hint|@clue$/i =~ payload || /^@next|@skip$/i =~ payload)
-    $tx_bot.send_text('Trivia has not yet started.', @ch_index)
-    next nil
-  end
+  $TRIVIA = Trivia.new(ch_index: ch_index, max_questions: params_str).start if /^@trivia/i =~ payload
   next nil if $TRIVIA.nil?
   $TRIVIA.score(node) if /^@score|@points$/i =~ payload
   $TRIVIA.hint(node) if /^@hint|@clue$/i =~ payload
@@ -44,9 +34,13 @@ class Trivia
   end
 
   def start
+    if $TRIVIA.present?
+      $tx_bot.send_text('Trivia is already running!', @ch_index)
+      return nil
+    end
     if @ch_index.to_i != $settings['trivia']['ch_index']
-      $tx_bot.send_text($Trivia::INCORRECT_CH_INDEX_MSG, @ch_index)
-      return
+      $tx_bot.send_text(Trivia::INCORRECT_CH_INDEX_MSG, @ch_index)
+      return nil
     end
     @question_number = 0
     TriviaProfile.delete_all
