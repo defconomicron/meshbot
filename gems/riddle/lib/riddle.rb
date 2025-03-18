@@ -13,10 +13,7 @@ class Riddle
     return if $tx_bot.thread.present? && $tx_bot.thread.alive?
     riddle, answer = Riddle::RIDDLES.sample
     $tx_bot.send_text(riddle, @ch_index)
-    $tx_bot.thread = Thread.new {
-      sleep 30
-      $tx_bot.send_text(answer, @ch_index)
-    } if answer.present?
+    $tx_bot.thread = Thread.new {sleep 30;$tx_bot.send_text(answer, @ch_index)} if answer.present?
     nil
   end
 end
