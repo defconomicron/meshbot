@@ -2,10 +2,9 @@ require 'yaml'
 $settings = YAML.load_file('settings.yml') rescue {}
 raise Exception.new('settings.yml not defined') if $settings.blank?
 
-($COMMAND_KEYWORDS ||= []) << '@trivia'
 $TRIVIA = nil
-$TRIVIA_INCORRECT_CH_INDEX_MSG = $settings['trivia']['incorrect_ch_index_msg'].presence || 'Trivia cannot be played on this channel.'
 
+($COMMAND_KEYWORDS ||= []) << '@trivia'
 ($TEXT_MESSAGE_HANDLERS ||= []) << Proc.new {|args|
   node = args[:node]
   ch_index = args[:ch_index]
@@ -36,6 +35,7 @@ class Trivia
   WINNER_RESPONSES = File.readlines("#{File.dirname(__FILE__)}/winner_responses.dat")
   TAUNT_RESPONSES = File.readlines("#{File.dirname(__FILE__)}/taunt_responses.dat")
   LOSER_RESPONSES = File.readlines("#{File.dirname(__FILE__)}/loser_responses.dat")
+  INCORRECT_CH_INDEX_MSG = $settings['trivia']['incorrect_ch_index_msg'].presence || 'Trivia cannot be played on this channel.'
 
   def initialize(options)
     @ch_index = options[:ch_index]
@@ -45,7 +45,7 @@ class Trivia
 
   def start
     if @ch_index.to_i != $settings['trivia']['ch_index']
-      $tx_bot.send_text($TRIVIA_INCORRECT_CH_INDEX_MSG, @ch_index)
+      $tx_bot.send_text($Trivia::INCORRECT_CH_INDEX_MSG, @ch_index)
       return
     end
     @question_number = 0
