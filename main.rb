@@ -43,7 +43,7 @@ begin
   $log_it.log "[#{$tx_bot.name}] MONITORING!", :yellow
   $tx_bot.monitor
 
-  # Process.daemon(true, false)
+  Process.daemon(true, false)
   # NoticesBot.new.monitor
 
   while true;sleep 1;end;
