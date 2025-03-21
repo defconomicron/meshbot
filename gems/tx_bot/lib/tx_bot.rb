@@ -76,7 +76,9 @@ class TxBot
     end
 
     def send_message(ch_index, text)
-      yield IO.popen("#{$meshtastic_path} --host #{$tx_bot.host} --ch-index #{ch_index} --no-time --ack --sendtext \"#{text}\"")
+      cmd = "#{$meshtastic_path} --host #{$tx_bot.host} --ch-index #{ch_index} --no-time --ack --sendtext \"#{text}\""
+      log "RUNNING: #{cmd}", :yellow
+      yield IO.popen(cmd)
     end
 
     def get_next_message

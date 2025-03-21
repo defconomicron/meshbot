@@ -11,7 +11,9 @@ class MeshtasticCli
   end
 
   def responses(&block)
-    PTY.spawn("#{$meshtastic_path} --host #{@host} --listen") do |stdout, stdin, pid|
+    cmd = "#{$meshtastic_path} --host #{@host} --listen"
+    log "RUNNING: #{cmd}", :yellow
+    PTY.spawn(cmd) do |stdout, stdin, pid|
       response = ''
       stdout.each do |line|
         line = filter_line(line)

@@ -1,3 +1,4 @@
+Process.daemon(true, false)
 require './config/environment.rb'
 $log_it = LogIt.new
 $log_it.log 'LOADING SETTINGS...', :yellow
@@ -42,9 +43,7 @@ begin
   $rx_bot.monitor
   $log_it.log "[#{$tx_bot.name}] MONITORING!", :yellow
   $tx_bot.monitor
-  $log_it.log "[#{$tx_bot.name}] DAEMONIZING...", :yellow
-  Process.daemon(true, true)
-  $log_it.log "[#{$tx_bot.name}] DAEMONIZED!", :yellow
+
   # NoticesBot.new.monitor
 
   while true;sleep 1;end;
