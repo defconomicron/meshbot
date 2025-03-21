@@ -4,7 +4,7 @@ namespace :command do
     puts 'Deploying...'
     f = IO.popen('ssh kd5ef@192.168.1.52', 'r+')
     f.puts 'cd meshbot'
-    f.puts 'config core.filemode false'
+    f.puts 'git config core.filemode false'
     f.puts 'cd'
     f.puts 'git -C meshbot pull || git clone https://github.com/defconomicron/meshbot.git'
     f.puts 'sudo chown -R kd5ef:kd5ef /home/kd5ef/meshbot'
