@@ -4,17 +4,17 @@ class MessageReceiver
   attr_accessor :pid, :hold
 
   def initialize
-    raise Exception.new('settings.yml not defined') if SETTINGS.blank?
-    @meshtastic_path = SETTINGS['meshtastic']['path'] rescue nil
+    raise Exception.new('settings.yml not defined') if $settings.blank?
+    @meshtastic_path = $settings['meshtastic']['path'] rescue nil
     raise Exception.new('meshtastic => path not defined') if @meshtastic_path.blank?
-    @host = SETTINGS['host'] rescue nil
+    @host = $settings['host'] rescue nil
     raise Exception.new('host not defined') if @meshtastic_path.blank?
   end
 
   def kill
     if @pid.present?
       cmd = "kill -9 #{@pid}"
-      puts cmd
+      $log_it.log cmd, :yellow
       `#{cmd}`
       @pid = nil
     end
@@ -24,12 +24,12 @@ class MessageReceiver
     begin
       while @hold;sleep 1;end
       cmd = "#{@meshtastic_path} --host #{@host} --listen"
-      puts cmd
+      $log_it.log cmd, :yellow
       PTY.spawn(cmd) do |stdout, stdin, pid|
         @pid = pid
         response = ''
         stdout.each do |line|
-          puts line
+          $log_it.log line, :black
           raise Exception.new(line) if error?(line)
           if response.blank? || !(line =~ /DEBUG/) # && line =~ /packet/)
             response << line << "\n"
@@ -75,7 +75,7 @@ class MessageReceiver
         end
       end
     rescue Exception => e
-      puts "MessageReceiver: #{e} #{e.backtrace}"
+      $log_it.log "MessageReceiver: #{e} #{e.backtrace}", :yellow
       retry
     end
     self

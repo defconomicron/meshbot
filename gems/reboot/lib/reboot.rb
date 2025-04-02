@@ -5,7 +5,8 @@ class Reboot
   end
 
   def msg
-    Thread.new {sleep 30;MeshtasticCli.new(host: $rx_bot.host).reboot;MeshtasticCli.new(host: $tx_bot.host).reboot}
-    'Rebooting...'
+    # Thread.new {sleep 30;MeshtasticCli.new(host: $rx_bot.host).reboot;MeshtasticCli.new(host: $tx_bot.host).reboot}
+    # 'Rebooting...'
+    'TODO: Fix me!'
   end
 end

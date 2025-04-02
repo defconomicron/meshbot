@@ -22,6 +22,6 @@ class Callsign
     tokens << "For more information on this operator visit: #{other_info_uls_url}" if other_info_uls_url.present?
     tokens
   rescue Exception => e
-    $tx_bot.log e, :red
+    $log_it.log e, :red
   end
 end

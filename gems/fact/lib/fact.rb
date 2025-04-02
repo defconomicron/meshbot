@@ -9,6 +9,6 @@ class Fact
     response = JSON.parse(`curl #{@url}`)
     response['text'].strip
   rescue Exception => e
-    $tx_bot.log e, :red
+    $log_it.log e, :red
   end
 end

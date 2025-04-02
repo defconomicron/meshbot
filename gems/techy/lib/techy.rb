@@ -32,6 +32,6 @@ class Techy
   def msg
     PHRASE_ARR.sample + ' ' + WORD_ARR.sample + ' ' + WORD_ARR.sample;
   rescue Exception => e
-    $tx_bot.log e, :red
+    $log_it.log e, :red
   end
 end

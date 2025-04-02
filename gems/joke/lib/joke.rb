@@ -10,12 +10,12 @@ class Joke
   end
 
   def msg
-    return if $tx_bot.thread.present? && $tx_bot.thread.alive?
+    return if $thread.present? && $thread.alive?
     joke, answer = Joke::JOKES.sample
-    $tx_bot.send_text(joke, @ch_index)
-    $tx_bot.thread = Thread.new {
+    $message_transmitter.transmit(ch_index: @ch_index, message: joke)
+    $thread = Thread.new {
       sleep 30
-      $tx_bot.send_text(answer, @ch_index)
+      $message_transmitter.transmit(ch_index: @ch_index, message: answer)
     } if answer.present?
     nil
   end
