@@ -18,16 +18,16 @@ class MessageTransmitter
       log "Attempting to kill MessageReceiver again..."
       retry
     end
-    @tries = 2
+    @retries = 2
     begin
       cmd = "#{@meshtastic_path} --host #{@host} --ch-index #{ch_index} --no-time --ack --sendtext \"#{sanitize(message)}\""
       log cmd, :yellow
       execute_cmd(cmd)
     rescue Exception => e
       log "#{e} #{e.backtrace}", :red
-      if @tries > 0
-        log "Retrying: #{cmd}"
-        @tries -= 1
+      if @retries > 0
+        log "Retrying [remaining: #{@retries}]: #{cmd}"
+        @retries -= 1
         retry
       end
     end
