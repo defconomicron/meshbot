@@ -75,7 +75,7 @@ class MessageReceiver
         end
       end
     rescue Exception => e
-      log "Exception: #{e} #{e.backtrace}", :yellow
+      log "Exception: #{e} #{e.backtrace}", :red
       retry
     end
     self

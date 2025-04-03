@@ -118,7 +118,7 @@ class Trivia
     @trivia_question, @trivia_answer = File.readlines("#{File.dirname(__FILE__)}/trivia.dat").sample.split('*')
     @trivia_question.strip!
     @trivia_answer.strip!
-    $log_it.log "TRIVIA_QUESTION = #{@trivia_question} | TRIVIA_ANSWER = #{@trivia_answer}", :red
+    $log_it.log "TRIVIA_QUESTION = #{@trivia_question} | TRIVIA_ANSWER = #{@trivia_answer}", :green
     $message_transmitter.transmit(message: "For #{@trivia_answer.length} points, #{@trivia_question}", ch_index: @ch_index)
     $TAUNT_THREAD = Thread.new {sleep 60;$message_transmitter.transmit(message: Trivia::TAUNT_RESPONSES.sample, ch_index: @ch_index)}
     $TIMES_UP_THREAD = Thread.new {sleep 120;$message_transmitter.transmit(message: "#{Trivia::LOSER_RESPONSES.sample}: #{@trivia_answer}", ch_index: @ch_index);new_question}
