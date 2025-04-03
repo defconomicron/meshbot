@@ -1,6 +1,5 @@
 require './config/environment.rb'
 
-$log_it = LogIt.new
 $log_it.log 'LOADING SETTINGS...', :yellow
 
 $thread = nil

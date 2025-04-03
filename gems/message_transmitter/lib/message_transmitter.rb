@@ -20,12 +20,13 @@ class MessageTransmitter
     end
     @tries = 2
     begin
-      cmd = "#{@meshtastic_path} --host #{@host} --ch-index #{ch_index} --no-time --ack --sendtext \"#{message}\""
+      cmd = "#{@meshtastic_path} --host #{@host} --ch-index #{ch_index} --no-time --ack --sendtext \"#{sanitize(message)}\""
       log cmd, :yellow
-      `#{cmd}`
+      execute_cmd(cmd)
     rescue Exception => e
-      log "MessageTransmitter: #{e} #{e.backtrace}", :red
+      log "#{e} #{e.backtrace}", :red
       if @tries > 0
+        log "Retrying: #{cmd}"
         @tries -= 1
         retry
       end
@@ -37,7 +38,35 @@ class MessageTransmitter
 
   private
 
+    def execute_cmd(cmd)
+      response = []
+      begin
+        PTY.spawn(cmd) do |stdout, stdin, pid|
+          stdout.each do |line|
+            log line
+            response << line
+          end
+        end
+      rescue Exception => e
+        log "#{e}"
+        response << "#{e}"
+      end
+      raise Exception.new(response.join(' ')) if error?(response.join(' '))
+      response
+    end
+
+    def error?(str)
+      str =~ /timed out/i ||
+      str =~ /error connecting/i ||
+      str =~ /connection reset/i ||
+      str =~ /broken pipe/i
+    end
+
     def log(text, color = nil)
       $log_it.log "MessageTransmitter: #{text}", color
+    end
+
+    def sanitize(str)
+      "#{str}".gsub('"',"'")
     end
 end
