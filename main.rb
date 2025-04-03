@@ -29,10 +29,6 @@ $max_text_length = $settings['max_text_length'] rescue nil
 raise Exception.new('max_text_length not defined in settings.yml') if $max_text_length.blank?
 $log_it.log 'max_text_length found in settings.yml', :green
 
-$sending_tries = $settings['sending_tries'] rescue nil
-raise Exception.new('sending_tries not defined in settings.yml') if $sending_tries.blank?
-$log_it.log 'sending_tries found in settings.yml', :green
-
 $message_receiver = MessageReceiver.new
 $message_processor = MessageProcessor.new.process
 $message_transmitter = MessageTransmitter.new
