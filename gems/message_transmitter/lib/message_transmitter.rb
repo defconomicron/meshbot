@@ -67,6 +67,6 @@ class MessageTransmitter
     end
 
     def sanitize(str)
-      "#{str}".gsub('"',"'")
+      "#{str}".gsub('"',"'").gsub("\n",'').gsub("\r",'')
     end
 end
