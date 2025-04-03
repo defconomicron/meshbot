@@ -26,8 +26,8 @@ class MessageTransmitter
     rescue Exception => e
       log "#{e} #{e.backtrace}", :red
       if @retries > 0
-        log "Retrying [remaining: #{@retries}]: #{cmd}"
         @retries -= 1
+        log "Retrying [remaining: #{@retries}]: #{cmd}"
         retry
       end
     end

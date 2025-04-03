@@ -22,6 +22,7 @@ class MessageReceiver
 
   def receive(&block)
     begin
+      log "Holding..." if @hold
       while @hold;sleep 1;end
       cmd = "#{@meshtastic_path} --host #{@host} --listen"
       log cmd, :yellow
@@ -76,7 +77,7 @@ class MessageReceiver
       end
     rescue Exception => e
       log "Exception: #{e} #{e.backtrace}", :red
-      log "Restarting..."
+      log "Restarting due to exception..."
       retry
     end
     self
