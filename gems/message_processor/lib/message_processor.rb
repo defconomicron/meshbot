@@ -43,19 +43,19 @@ class MessageProcessor
               @time = message['time'].to_i
             end
           when 'POSITION_APP'
-            log "[#{node.name}]: #{message}", :blue
+            # log "[#{node.name}]: #{message}", :blue
             node.position_snapshot = message.to_json
             node.save
           when 'TELEMETRY_APP'
-            log "[#{node.name}]: #{message}", :blue
+            # log "[#{node.name}]: #{message}", :blue
             node.telemetry_snapshot = message.to_json
             node.save
           when 'NODEINFO_APP'
-            log "[#{node.name}]: #{message}", :blue
+            # log "[#{node.name}]: #{message}", :blue
             node.nodeinfo_snapshot = message.to_json
             node.save
           else
-            log "[#{node.name}]: #{message}", :black
+            # log "[#{node.name}]: #{message}", :black
         end
       end
     }
@@ -65,7 +65,7 @@ class MessageProcessor
   private
 
     def log(text, color = nil)
-      $log_it.log "#{text}", color
+      $log_it.log "MessageProcessor: #{text}", color
     end
 
     def payload_to_params_arr(payload)

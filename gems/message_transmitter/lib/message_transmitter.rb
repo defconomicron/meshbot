@@ -13,16 +13,16 @@ class MessageTransmitter
     begin
       $message_receiver.kill
     rescue
-      $log_it.log "Trying to kill message receiver again...", :yellow
+      log "Trying to kill message receiver again...", :yellow
       retry
     end
     @tries = 2
     begin
       cmd = "#{@meshtastic_path} --host #{@host} --ch-index #{ch_index} --no-time --ack --sendtext \"#{message}\""
-      $log_it.log cmd, :yellow
+      log cmd, :yellow
       `#{cmd}`
     rescue Exception => e
-      $log_it.log "MessageTransmitter: #{e} #{e.backtrace}", :yellow
+      log "MessageTransmitter: #{e} #{e.backtrace}", :yellow
       if @tries > 0
         @tries -= 1
         retry
@@ -31,4 +31,10 @@ class MessageTransmitter
     $message_receiver.hold = false
     self
   end
+
+  private
+
+    def log(text, color = nil)
+      $log_it.log "MessageTransmitter: #{text}", color
+    end
 end

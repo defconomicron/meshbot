@@ -14,7 +14,7 @@ class MessageReceiver
   def kill
     if @pid.present?
       cmd = "kill -9 #{@pid}"
-      $log_it.log cmd, :yellow
+      log cmd, :yellow
       `#{cmd}`
       @pid = nil
     end
@@ -24,12 +24,12 @@ class MessageReceiver
     begin
       while @hold;sleep 1;end
       cmd = "#{@meshtastic_path} --host #{@host} --listen"
-      $log_it.log cmd, :yellow
+      log cmd, :yellow
       PTY.spawn(cmd) do |stdout, stdin, pid|
         @pid = pid
         response = ''
         stdout.each do |line|
-          $log_it.log line, :black
+          # log line, :black
           raise Exception.new(line) if error?(line)
           if response.blank? || !(line =~ /DEBUG/) # && line =~ /packet/)
             response << line << "\n"
@@ -75,10 +75,14 @@ class MessageReceiver
         end
       end
     rescue Exception => e
-      $log_it.log "MessageReceiver: #{e} #{e.backtrace}", :yellow
+      log "Exception: #{e} #{e.backtrace}", :yellow
       retry
     end
     self
+  end
+
+  def log(str, color = :black)
+    $log_it.log "MessageReceiver: #{str}", color
   end
 
   def get_value(str, key)
