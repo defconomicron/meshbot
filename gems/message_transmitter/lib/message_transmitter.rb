@@ -3,8 +3,8 @@ class MessageTransmitter
     raise Exception.new('settings.yml not defined') if $settings.blank?
     @meshtastic_cli_path = $settings['meshtastic_cli_path'] rescue nil
     raise Exception.new('meshtastic_cli_path not defined') if @meshtastic_cli_path.blank?
-    @host = $settings['host'] rescue nil
-    raise Exception.new('host not defined') if @host.blank?
+    @node_ip_address = $settings['node_ip_address'] rescue nil
+    raise Exception.new('node_ip_address not defined') if @node_ip_address.blank?
   end
 
   def transmit(ch_index: nil, message: nil)
@@ -20,7 +20,7 @@ class MessageTransmitter
     end
     @retries = 2
     begin
-      cmd = "#{@meshtastic_cli_path} --host #{@host} --ch-index #{ch_index} --no-time --ack --sendtext \"#{sanitize(message)}\""
+      cmd = "#{@meshtastic_cli_path} --host #{@node_ip_address} --ch-index #{ch_index} --no-time --ack --sendtext \"#{sanitize(message)}\""
       log cmd, :yellow
       execute_cmd(cmd)
     rescue Exception => e

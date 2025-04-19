@@ -7,8 +7,8 @@ class MessageReceiver
     raise Exception.new('settings.yml not defined') if $settings.blank?
     @meshtastic_cli_path = $settings['meshtastic_cli_path'] rescue nil
     raise Exception.new('meshtastic_cli_path not defined') if @meshtastic_cli_path.blank?
-    @host = $settings['host'] rescue nil
-    raise Exception.new('host not defined') if @host.blank?
+    @node_ip_address = $settings['node_ip_address'] rescue nil
+    raise Exception.new('node_ip_address not defined') if @node_ip_address.blank?
   end
 
   def receive(&block)
@@ -93,7 +93,7 @@ class MessageReceiver
     end
 
     def meshtastic_cli_cmd
-      str = "#{@meshtastic_cli_path} --host #{@host} --listen"
+      str = "#{@meshtastic_cli_path} --host #{@node_ip_address} --listen"
       log str, :yellow
       str
     end
