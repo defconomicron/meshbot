@@ -1,8 +1,8 @@
 class MessageTransmitter
   def initialize
     raise Exception.new('settings.yml not defined') if $settings.blank?
-    @meshtastic_path = $settings['meshtastic']['path'] rescue nil
-    raise Exception.new('meshtastic => path not defined') if @meshtastic_path.blank?
+    @meshtastic_cli_path = $settings['meshtastic_cli_path'] rescue nil
+    raise Exception.new('meshtastic_cli_path not defined') if @meshtastic_cli_path.blank?
     @host = $settings['host'] rescue nil
     raise Exception.new('host not defined') if @host.blank?
   end
@@ -20,7 +20,7 @@ class MessageTransmitter
     end
     @retries = 2
     begin
-      cmd = "#{@meshtastic_path} --host #{@host} --ch-index #{ch_index} --no-time --ack --sendtext \"#{sanitize(message)}\""
+      cmd = "#{@meshtastic_cli_path} --host #{@host} --ch-index #{ch_index} --no-time --ack --sendtext \"#{sanitize(message)}\""
       log cmd, :yellow
       execute_cmd(cmd)
     rescue Exception => e
