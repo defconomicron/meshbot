@@ -1,3 +1,5 @@
+Process.daemon(true, false)
+
 require './config/environment.rb'
 
 $log_it.log 'LOADING SETTINGS...', :yellow
