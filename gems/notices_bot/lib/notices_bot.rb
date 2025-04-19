@@ -7,7 +7,7 @@ class NoticesBot
       while true
         variable = Variable.where(key: :notices_last_sent_at).first_or_initialize
         variable.value = 2.days.ago if variable.value.blank?
-        if Time.now.hour >= 18 && Time.parse(variable.value) < 1.day.ago
+        if Time.now.hour < 18 || 1.day.ago < Time.parse(variable.value)
           sleep 1
           next
         end

@@ -34,5 +34,6 @@ $log_it.log 'max_text_length found in settings.yml', :green
 $message_receiver = MessageReceiver.new
 $message_processor = MessageProcessor.new.process
 $message_transmitter = MessageTransmitter.new
+NoticesBot.new.monitor
 
 while true;sleep 1;end;
