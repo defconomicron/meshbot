@@ -16,22 +16,13 @@ class MessageProcessor
           when 'TEXT_MESSAGE_APP'
             if @time < message['time'].to_i
               log "[#{node.name}]: #{message}", :blue
-              ch_index = extract_ch_index(message)
-              payload = extract_payload(message)
+              ch_index = message_to_ch_index(message)
+              payload = message_to_payload(message)
               Message.create(node_id: node.id, ch_index: ch_index, message: payload)
               params_arr = payload_to_params_arr(payload)
               params_str = params_arr_to_params_str(params_arr)
-              if node_ignored?(node)
-                log "#{node.name} IS CURRENTLY IGNORED!", :red
-                next
-              end
-              options = {
-                node:       node,
-                ch_index:   ch_index,
-                payload:    payload,
-                params_arr: params_arr,
-                params_str: params_str
-              }
+              next if node_ignored?(node)
+              options = {node: node, ch_index: ch_index, payload: payload, params_arr: params_arr, params_str: params_str}
               $TEXT_MESSAGE_HANDLERS.each {|handler|
                 texts = [handler.call(options)].flatten.compact.select(&:present?)
                 texts.each {|text| $message_transmitter.transmit(ch_index: ch_index, message: text)}
@@ -43,20 +34,13 @@ class MessageProcessor
               @time = message['time'].to_i
             end
           when 'POSITION_APP'
-            # log "[#{node.name}]: #{message}", :blue
             node.position_snapshot = message.to_json
-            node.save
           when 'TELEMETRY_APP'
-            # log "[#{node.name}]: #{message}", :blue
             node.telemetry_snapshot = message.to_json
-            node.save
           when 'NODEINFO_APP'
-            # log "[#{node.name}]: #{message}", :blue
             node.nodeinfo_snapshot = message.to_json
-            node.save
-          else
-            # log "[#{node.name}]: #{message}", :black
         end
+        node.save
       end
     }
     self
@@ -76,16 +60,18 @@ class MessageProcessor
       params_arr.join(' ')
     end
 
-    def extract_payload(message)
+    def message_to_payload(message)
       "#{(message['payload'] rescue nil)}".strip
     end
 
-    def extract_ch_index(message)
+    def message_to_ch_index(message)
       (message['channel'] rescue nil) || 0
     end
 
     def node_ignored?(node)
-      @ignored_node_numbers.include?(node.number) || node.ignore? || node.short_name == $node_short_name || @deaf
+      ignore = @ignored_node_numbers.include?(node.number) || node.ignore? || node.short_name == $node_short_name || @deaf
+      log("#{node.name} IS CURRENTLY IGNORED!", :red) if ignore
+      ignore
     end
 
     def temporarily_ignore_node_number(number)

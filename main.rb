@@ -1,4 +1,4 @@
-Process.daemon(true, false)
+# Process.daemon(true, false)
 
 require './config/environment.rb'
 
