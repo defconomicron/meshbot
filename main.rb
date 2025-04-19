@@ -11,17 +11,17 @@ $settings = YAML.load_file('settings.yml') rescue {}
 raise Exception.new('settings.yml not defined') if $settings.blank?
 $log_it.log 'settings.yml found', :green
 
-$short_name = $settings['node']['short_name'] rescue nil
-raise Exception.new('short_name not defined in settings.yml') if $short_name.blank?
-$log_it.log 'short_name found in settings.yml', :green
+$node_short_name = $settings['node']['short_name'] rescue nil
+raise Exception.new('node => short_name not defined in settings.yml') if $node_short_name.blank?
+$log_it.log 'node => short_name found in settings.yml', :green
 
-$long_name = $settings['node']['long_name'] rescue nil
-raise Exception.new('long_name not defined in settings.yml') if $long_name.blank?
-$log_it.log 'long_name found in settings.yml', :green
+$node_long_name = $settings['node']['long_name'] rescue nil
+raise Exception.new('node => long_name not defined in settings.yml') if $node_long_name.blank?
+$log_it.log 'node => long_name found in settings.yml', :green
 
-$host = $settings['host'] rescue nil
-raise Exception.new('host not defined in settings.yml') if $host.blank?
-$log_it.log 'host found in settings.yml', :green
+$node_ip_address = $settings['node']['ip_address'] rescue nil
+raise Exception.new('node => ip_address not defined in settings.yml') if $node_ip_address.blank?
+$log_it.log 'node => ip_address found in settings.yml', :green
 
 $meshtastic_cli_path = $settings['meshtastic_cli_path'] rescue nil
 raise Exception.new('meshtastic_cli_path not defined in settings.yml') if $meshtastic_cli_path.blank?

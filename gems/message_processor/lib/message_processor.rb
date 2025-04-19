@@ -85,7 +85,7 @@ class MessageProcessor
     end
 
     def node_ignored?(node)
-      @ignored_node_numbers.include?(node.number) || node.ignore? || node.short_name == $short_name || @deaf
+      @ignored_node_numbers.include?(node.number) || node.ignore? || node.short_name == $node_short_name || @deaf
     end
 
     def temporarily_ignore_node_number(number)
