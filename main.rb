@@ -23,9 +23,9 @@ $host = $settings['host'] rescue nil
 raise Exception.new('host not defined in settings.yml') if $host.blank?
 $log_it.log 'host found in settings.yml', :green
 
-$meshtastic_path = $settings['meshtastic']['path'] rescue nil
-raise Exception.new('meshtastic => path not defined in settings.yml') if $meshtastic_path.blank?
-$log_it.log 'meshtastic => path found in settings.yml', :green
+$meshtastic_cli_path = $settings['meshtastic_cli_path'] rescue nil
+raise Exception.new('meshtastic_cli_path not defined in settings.yml') if $meshtastic_cli_path.blank?
+$log_it.log 'meshtastic_cli_path found in settings.yml', :green
 
 $max_text_length = $settings['max_text_length'] rescue nil
 raise Exception.new('max_text_length not defined in settings.yml') if $max_text_length.blank?
