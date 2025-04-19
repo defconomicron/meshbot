@@ -49,7 +49,7 @@ gem 'url_resolver', path: 'gems/url_resolver'
 gem 'trivia', path: 'gems/trivia'
 gem 'reboot', path: 'gems/reboot'
 # gem 'yo_momma', path: 'gems/yo_momma'
-# gem 'notices_bot', path: 'gems/notices_bot'
+gem 'notices_bot', path: 'gems/notices_bot'
 gem 'censor', path: 'gems/censor'
 
 gem 'message_receiver', path: 'gems/message_receiver'
