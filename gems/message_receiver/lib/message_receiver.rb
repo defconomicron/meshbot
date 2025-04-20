@@ -125,7 +125,7 @@ class MessageReceiver
     end
 
     def get_value(str, key)
-      str.scan(/#{key}: ['"]*(.*?)['"]*(\r|\n|,|}|$)/).flatten.first.strip.force_encoding('UTF-8') rescue nil
+      str.scan(/#{key}: ['"]*(.*?)['"]*(\r|\n|}|$)/).flatten.first.strip.force_encoding('UTF-8') rescue nil
     end
 
     def throw_error(line)
