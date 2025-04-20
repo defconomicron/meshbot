@@ -1,5 +1,20 @@
 require 'pty'
 
+# DEBUG file:mesh_interface.py _handleFromRadio line:1060 Received from radio: packet {
+#   from: 1136045656
+#   to: 4294967295
+#   channel: 3
+#   decoded {
+#     portnum: TEXT_MESSAGE_APP
+#     payload: "@notice 1 Welcome to the Test channel!"
+#     bitfield: 1
+#   }
+#   id: 10890508
+#   rx_time: 1745115732
+#   via_mqtt: true
+#   hop_start: 4
+# }
+
 class MessageReceiver
   attr_accessor :pid, :hold
 
@@ -20,10 +35,14 @@ class MessageReceiver
           response = ''
           stdout.each do |line|
             throw_error(line)
-            if response.blank? || !(line =~ /DEBUG/)
+            if line =~ /Received from radio/ || (response.present? && !(line =~ /DEBUG/))
               response << line << "\n"
               next
             end
+            # if response.blank? || !(line =~ /DEBUG/)
+            #   response << line << "\n"
+            #   next
+            # end
             options = {
               id:                  get_value(response, 'id'),
               from:                get_value(response, 'from'),
