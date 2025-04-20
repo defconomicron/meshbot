@@ -35,14 +35,17 @@ class MessageReceiver
           response = ''
           stdout.each do |line|
             throw_error(line)
-            if line =~ /Received from radio/ || (response.present? && !(line =~ /DEBUG/))
+
+            if line =~ /Received from radio: packet {/
               response << line << "\n"
               next
+            elsif response.present? && !(line =~ /DEBUG/)
+              response << line << "\n"
+              next
+            elsif response.blank?
+              next
             end
-            # if response.blank? || !(line =~ /DEBUG/)
-            #   response << line << "\n"
-            #   next
-            # end
+
             options = {
               id:                  get_value(response, 'id'),
               from:                get_value(response, 'from'),
@@ -122,7 +125,7 @@ class MessageReceiver
     end
 
     def get_value(str, key)
-      str.scan(/#{key}: ['"]*(.*?)['"]*(\n\r,}|$)/).flatten.first.strip.force_encoding('UTF-8') rescue nil
+      str.scan(/#{key}: ['"]*(.*?)['"]*(\r|\n|,|}|$)/).flatten.first.strip.force_encoding('UTF-8') rescue nil
     end
 
     def throw_error(line)
