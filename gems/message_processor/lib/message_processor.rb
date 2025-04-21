@@ -23,7 +23,7 @@ class MessageProcessor
 
   private
 
-    def number_to_node(message)
+    def message_to_node(message)
       number = message['num'].presence || message['from']
       return if number.blank?
       node = Node.where(number: number).first_or_initialize
