@@ -7,11 +7,8 @@ class MessageProcessor
     Thread.new {
       @time = 0
       $message_receiver.try(:receive) do |message|
-        number = message['num'].presence || message['from']
-        next if number.blank?
-        node = Node.where(number: number).first_or_initialize
-        node.updated_at = Time.now
-        node.save
+        node = message_to_node(message)
+        next if node.nil?
         case message['portnum']
           when 'TEXT_MESSAGE_APP' then handle_text_message(node: node, message: message)
           when 'POSITION_APP' then node.position_snapshot = message.to_json
@@ -25,6 +22,15 @@ class MessageProcessor
   end
 
   private
+
+    def number_to_node(message)
+      number = message['num'].presence || message['from']
+      return if number.blank?
+      node = Node.where(number: number).first_or_initialize
+      node.updated_at = Time.now
+      node.save
+      node
+    end
 
     def handle_text_message(node: nil, message: nil)
       return if @time >= message['time'].to_i
