@@ -27,14 +27,14 @@ class MessageProcessor
   private
 
     def handle_text_message(node: nil, message: nil)
-      next if @time >= message['time'].to_i
+      return if @time >= message['time'].to_i
       log "[#{node.name}]: #{message}", :blue
       ch_index = message_to_ch_index(message)
       payload = message_to_payload(message)
       Message.create(node_id: node.id, ch_index: ch_index, message: payload)
       params_arr = payload_to_params_arr(payload)
       params_str = params_arr_to_params_str(params_arr)
-      next if node_ignored?(node)
+      return if node_ignored?(node)
       options = {node: node, ch_index: ch_index, payload: payload, params_arr: params_arr, params_str: params_str}
       $TEXT_MESSAGE_HANDLERS.each {|handler|
         texts = [handler.call(options)].flatten.compact.select(&:present?)
