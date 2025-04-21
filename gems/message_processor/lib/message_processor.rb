@@ -13,32 +13,10 @@ class MessageProcessor
         node.updated_at = Time.now
         node.save
         case message['portnum']
-          when 'TEXT_MESSAGE_APP'
-            if @time < message['time'].to_i
-              log "[#{node.name}]: #{message}", :blue
-              ch_index = message_to_ch_index(message)
-              payload = message_to_payload(message)
-              Message.create(node_id: node.id, ch_index: ch_index, message: payload)
-              params_arr = payload_to_params_arr(payload)
-              params_str = params_arr_to_params_str(params_arr)
-              next if node_ignored?(node)
-              options = {node: node, ch_index: ch_index, payload: payload, params_arr: params_arr, params_str: params_str}
-              $TEXT_MESSAGE_HANDLERS.each {|handler|
-                texts = [handler.call(options)].flatten.compact.select(&:present?)
-                texts.each {|text| $message_transmitter.transmit(ch_index: ch_index, message: text)}
-                if texts.present?
-                  temporarily_ignore_node_number(node.number)
-                  break
-                end
-              }
-              @time = message['time'].to_i
-            end
-          when 'POSITION_APP'
-            node.position_snapshot = message.to_json
-          when 'TELEMETRY_APP'
-            node.telemetry_snapshot = message.to_json
-          when 'NODEINFO_APP'
-            node.nodeinfo_snapshot = message.to_json
+          when 'TEXT_MESSAGE_APP' then handle_text_message(node: node, message: message)
+          when 'POSITION_APP' then node.position_snapshot = message.to_json
+          when 'TELEMETRY_APP' then node.telemetry_snapshot = message.to_json
+          when 'NODEINFO_APP' then node.nodeinfo_snapshot = message.to_json
         end
         node.save
       end
@@ -47,6 +25,27 @@ class MessageProcessor
   end
 
   private
+
+    def handle_text_message(node: nil, message: nil)
+      next if @time >= message['time'].to_i
+      log "[#{node.name}]: #{message}", :blue
+      ch_index = message_to_ch_index(message)
+      payload = message_to_payload(message)
+      Message.create(node_id: node.id, ch_index: ch_index, message: payload)
+      params_arr = payload_to_params_arr(payload)
+      params_str = params_arr_to_params_str(params_arr)
+      next if node_ignored?(node)
+      options = {node: node, ch_index: ch_index, payload: payload, params_arr: params_arr, params_str: params_str}
+      $TEXT_MESSAGE_HANDLERS.each {|handler|
+        texts = [handler.call(options)].flatten.compact.select(&:present?)
+        texts.each {|text| $message_transmitter.transmit(ch_index: ch_index, message: text)}
+        if texts.present?
+          temporarily_ignore_node_number(node.number)
+          break
+        end
+      }
+      @time = message['time'].to_i
+    end
 
     def log(text, color = nil)
       $log_it.log "MessageProcessor: #{text}", color
